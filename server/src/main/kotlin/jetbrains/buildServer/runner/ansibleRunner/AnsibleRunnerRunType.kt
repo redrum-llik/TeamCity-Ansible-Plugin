@@ -1,14 +1,19 @@
 package jetbrains.buildServer.runner.ansibleRunner
 
+import jetbrains.buildServer.requirements.Requirement
+import jetbrains.buildServer.requirements.RequirementType
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import jetbrains.buildServer.serverSide.InvalidProperty
 import jetbrains.buildServer.serverSide.PropertiesProcessor
 import jetbrains.buildServer.serverSide.RunType
 import jetbrains.buildServer.serverSide.RunTypeRegistry
+import jetbrains.buildServer.web.openapi.PluginDescriptor
 import java.util.*
 
-class AnsibleRunnerRunType() : RunType() {
-    constructor(runTypeRegistry: RunTypeRegistry) : this() {
+
+class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: PluginDescriptor) : RunType() {
+    init {
         runTypeRegistry.registerRunType(this)
     }
 
@@ -17,11 +22,11 @@ class AnsibleRunnerRunType() : RunType() {
     }
 
     override fun getEditRunnerParamsJspFilePath(): String? {
-        return "taskRunnerRunParams.jsp";
+        return myDescriptor.getPluginResourcesPath("ansibleRunnerParams.jsp")
     }
 
     override fun getViewRunnerParamsJspFilePath(): String? {
-        return "viewTaskRunnerRunParams.jsp";
+        return myDescriptor.getPluginResourcesPath("viewAnsibleRunnerParams.jsp")
     }
 
     override fun getDefaultRunnerProperties(): MutableMap<String, String> {
@@ -41,10 +46,26 @@ class AnsibleRunnerRunType() : RunType() {
         return AnsibleRunnerConstants.RUNNER_DESCRIPTION
     }
 
+    override fun getRunnerSpecificRequirements(runParameters: MutableMap<String, String>): MutableList<Requirement> {
+        val result: MutableList<Requirement> = ArrayList<Requirement>()
+        result.add(
+            Requirement(
+                AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PATH,
+                null,
+                RequirementType.EXISTS
+            )
+        )
+        return result
+    }
+
     companion object {
         class ParametersValidator : PropertiesProcessor {
-            override fun process(p0: MutableMap<String, String>?): MutableCollection<InvalidProperty> {
+            override fun process(properties: MutableMap<String, String>): MutableCollection<InvalidProperty> {
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
+                val config = AnsibleRunnerInstanceConfiguration(properties)
+                if (config.getPlaybook().isNullOrEmpty()) {
+                    ret.add(InvalidProperty(AnsibleRunnerConstants.RUNNER_PARAM_PLAYBOOK_FILE, "Required parameter"))
+                }
                 return ret
             }
         }

@@ -5,11 +5,8 @@ import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
-import com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces
 import jetbrains.buildServer.agent.BuildAgentConfiguration
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.ANSIBLE_COMMAND
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.PARAM_SEARCH_PATH
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.VERSION_PARAM
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.HashMap
@@ -28,7 +25,7 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
     }
 
     private fun getSearchPaths(buildAgentConfiguration: BuildAgentConfiguration): MutableList<SearchPath> {
-        val searchPath = buildAgentConfiguration.configurationParameters[PARAM_SEARCH_PATH]
+        val searchPath = buildAgentConfiguration.configurationParameters[AnsibleRunnerConstants.PARAM_SEARCH_PATH]
         val workDirPath = buildAgentConfiguration.workDirectory.toString()
         val result: MutableList<SearchPath> = ArrayList<SearchPath>()
         if (!searchPath.isNullOrBlank()) {
@@ -40,8 +37,8 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
 
     private fun runDetectionCommand(detectionPath: SearchPath): ProcessOutput {
         val commandLine = GeneralCommandLine()
-        commandLine.exePath = ANSIBLE_COMMAND
-        commandLine.addParameter(VERSION_PARAM)
+        commandLine.exePath = AnsibleRunnerConstants.ANSIBLE_COMMAND
+        commandLine.addParameter(AnsibleRunnerConstants.VERSION_PARAM)
         commandLine.setWorkDirectory(detectionPath.path)
 
         LOG.debug("Detecting Ansible in: $detectionPath")
@@ -52,10 +49,10 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
         val stdOut = output.stdout.trim { it <= ' ' }
         val stdErr = output.stderr.trim { it <= ' ' }
         val b = StringBuilder("Ansible detection command output: \n")
-        if (!isEmptyOrSpaces(stdOut)) {
+        if (!StringUtil.isEmptyOrSpaces(stdOut)) {
             b.append("\n----- stdout: -----\n").append(stdOut).append("\n")
         }
-        if (!isEmptyOrSpaces(stdErr)) {
+        if (!StringUtil.isEmptyOrSpaces(stdErr)) {
             b.append("\n----- stderr: -----\n").append(stdErr).append("\n")
         }
         LOG.warn(b.toString())

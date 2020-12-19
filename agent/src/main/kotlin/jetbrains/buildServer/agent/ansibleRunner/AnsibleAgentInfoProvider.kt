@@ -1,5 +1,6 @@
 package jetbrains.buildServer.agent.ansibleRunner
 
+// for the readability, constants are being imported directly
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter
 import jetbrains.buildServer.agent.AgentLifeCycleListener
@@ -7,11 +8,12 @@ import jetbrains.buildServer.agent.BuildAgent
 import jetbrains.buildServer.agent.BuildAgentConfiguration
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleDetector
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleInstance
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PATH
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PREFIX
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_VERSION
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_CONFIG_FILE_POSTFIX
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_PATH_POSTFIX
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_PY_VERSION_POSTFIX
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_VERSION_POSTFIX
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.PARAM_SEARCH_PATH
 import jetbrains.buildServer.util.EventDispatcher
 
@@ -74,11 +76,8 @@ class AnsibleAgentInfoProvider(
     }
 
     private fun registerMainInstance(mainInstance: AnsibleInstance) {
-        val ansibleVersionParameterName = "${AGENT_PARAM_ANSIBLE_PREFIX}_${AGENT_PARAM_VERSION_POSTFIX}"
-        myConfig.addConfigurationParameter(ansibleVersionParameterName, mainInstance.version)
-
-        val ansiblePathParameterName = "${AGENT_PARAM_ANSIBLE_PREFIX}_${AGENT_PARAM_PATH_POSTFIX}"
-        myConfig.addConfigurationParameter(ansiblePathParameterName, mainInstance.executablePath)
+        myConfig.addConfigurationParameter(AGENT_PARAM_ANSIBLE_PATH, mainInstance.version)
+        myConfig.addConfigurationParameter(AGENT_PARAM_ANSIBLE_VERSION, mainInstance.executablePath)
     }
 
     companion object {

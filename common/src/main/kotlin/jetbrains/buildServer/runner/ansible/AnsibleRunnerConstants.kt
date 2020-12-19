@@ -17,8 +17,16 @@ object AnsibleRunnerConstants {
     val AGENT_PARAM_PATH_POSTFIX = "Path"
     val AGENT_PARAM_PY_VERSION_POSTFIX = "PythonVersion"
 
+    val AGENT_PARAM_ANSIBLE_PATH = "${AGENT_PARAM_ANSIBLE_PREFIX}_${AGENT_PARAM_PATH_POSTFIX}"
+    val AGENT_PARAM_ANSIBLE_VERSION = "${AGENT_PARAM_ANSIBLE_PREFIX}_${AGENT_PARAM_VERSION_POSTFIX}"
+
     // ansible command-line data
 
     val ANSIBLE_COMMAND = "ansible"
     val VERSION_PARAM = "--version"
+
+    // ansible bean parameters
+    val RUNNER_PARAM_PLAYBOOK_FILE = "Playbook file"
+    val RUNNER_PARAM_INVENTORY_FILE = "Inventory file"
+    val RUNNER_PARAM_EXTRA_ARGS = "Additional arguments"
 }
