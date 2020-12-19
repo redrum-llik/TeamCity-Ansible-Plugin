@@ -7,8 +7,13 @@
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
 <div class="parameter">
-    Ansible:
-    * playbook: <props:displayValue name="${bean.playbookFileKey}" />
-    * inventory: <props:displayValue name="${bean.inventoryFileKey}" />
-    * extra arguments: <props:displayValue name="${bean.extraArgsKey}" />
+    Playbook: <props:displayValue name="${bean.playbookFileKey}" />
+</div>
+
+<div class="parameter">
+    Inventory: <props:displayValue name="${bean.inventoryFileKey}" />
+</div>
+
+<div class="parameter">
+    Additional arguments: <props:displayValue name="${bean.extraArgsKey}" />
 </div>

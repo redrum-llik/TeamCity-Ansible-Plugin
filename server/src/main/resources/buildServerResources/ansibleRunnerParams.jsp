@@ -27,7 +27,7 @@
 </tr>
 
 <tr id="ar_options">
-    <th><label for="${bean.extraArgsKey}">Options:</label></th>
+    <th><label for="${bean.extraArgsKey}">Additional arguments:</label></th>
     <td>
         <props:textProperty name="${bean.extraArgsKey}" className="longField"/>
         <span class="smallNote">Additional arguments to be passed to the command</span>
