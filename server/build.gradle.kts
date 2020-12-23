@@ -1,6 +1,4 @@
 import com.github.rodm.teamcity.TeamCityEnvironment
-import com.github.rodm.teamcity.TeamCityServerPlugin
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 
 plugins {
     kotlin("jvm")
@@ -54,6 +52,6 @@ task("teamcity") {
     dependsOn("serverPlugin")
 
     doLast {
-        println("##teamcity[publishArtifacts '${(tasks["serverPlugin"] as Zip).archivePath}']")
+        println("##teamcity[publishArtifacts '${(tasks["serverPlugin"] as Zip).archiveFile}']")
     }
 }

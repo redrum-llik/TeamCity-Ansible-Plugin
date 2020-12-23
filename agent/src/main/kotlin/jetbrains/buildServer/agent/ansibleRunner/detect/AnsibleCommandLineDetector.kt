@@ -6,6 +6,7 @@ import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
+import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -37,8 +38,8 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
 
     private fun runDetectionCommand(detectionPath: SearchPath): ProcessOutput {
         val commandLine = GeneralCommandLine()
-        commandLine.exePath = AnsibleRunnerConstants.ANSIBLE_COMMAND
-        commandLine.addParameter(AnsibleRunnerConstants.VERSION_PARAM)
+        commandLine.exePath = AnsibleCommandLineConstants.ANSIBLE_COMMAND
+        commandLine.addParameter(AnsibleCommandLineConstants.VERSION_PARAM)
         commandLine.setWorkDirectory(detectionPath.path)
 
         LOG.debug("Detecting Ansible in: $detectionPath")
