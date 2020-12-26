@@ -15,3 +15,5 @@ build
 /.gradle/checksums/md5-checksums.bin
 /.gradle/checksums/sha1-checksums.bin
 /.gradle/vcs-1/gc.properties
+/callback/interpreter
+/callback/.idea

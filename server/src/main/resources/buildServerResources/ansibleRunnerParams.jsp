@@ -8,7 +8,7 @@
 
 <forms:workingDirectory/>
 
-<tr id="ar_playbook_file">
+<tr id="playbook_file">
     <th><label for="${bean.playbookFileKey}">Playbook:</label></th>
     <td>
         <props:textProperty name="${bean.playbookFileKey}" className="longField"/>
@@ -17,7 +17,7 @@
     </td>
 </tr>
 
-<tr id="ar_inventory_file">
+<tr id="inventory_file">
     <th><label for="${bean.inventoryFileKey}">Inventory:</label></th>
     <td>
         <props:textProperty name="${bean.inventoryFileKey}" className="longField"/>
@@ -26,10 +26,22 @@
     </td>
 </tr>
 
-<tr id="ar_options">
+<tr id="options">
     <th><label for="${bean.extraArgsKey}">Additional arguments:</label></th>
     <td>
         <props:textProperty name="${bean.extraArgsKey}" className="longField"/>
         <span class="smallNote">Additional arguments to be passed to the command</span>
+    </td>
+</tr>
+
+<tr class="advancedSetting">
+    <th>Options:</th>
+    <td>
+        <props:checkboxProperty name="${bean.dryRunKey}"/>
+        <label for="${bean.dryRunKey}">Do a dry run</label>
+    </td>
+    <td>
+        <props:checkboxProperty name="${bean.failOnChangesKey}"/>
+        <label for="${bean.failOnChangesKey}">Fail build if changes were detected</label>
     </td>
 </tr>

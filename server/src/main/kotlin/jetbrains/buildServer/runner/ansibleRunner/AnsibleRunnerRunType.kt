@@ -64,7 +64,7 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
                 if (config.getPlaybook().isNullOrEmpty()) {
-                    ret.add(InvalidProperty(AnsibleRunnerConstants.RUNNER_PARAM_PLAYBOOK_FILE, "Required parameter"))
+                    ret.add(InvalidProperty(AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
                 }
                 return ret
             }

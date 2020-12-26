@@ -4,6 +4,7 @@ import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine
+import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import java.util.*
 import kotlin.collections.ArrayList
@@ -15,21 +16,13 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         val config = AnsibleRunnerInstanceConfiguration(runnerParameters)
         LOG.debug("Going to execute Ansible runner with following parameters: $config")
 
-        return makePlaybookCall(config, environmentVariables, workingDirectory.path)
-    }
-
-    private fun makePlaybookCall(
-        config: AnsibleRunnerInstanceConfiguration,
-        environment: Map<String, String>,
-        workingDirectory: String
-    ): SimpleProgramCommandLine {
         val arguments = prepareArguments(config)
-        val patchedEnvironment = prepareEnvironment(environment)
+        val patchedEnvironment = prepareEnvironment(environmentVariables)
 
         return SimpleProgramCommandLine(
             patchedEnvironment,
-            workingDirectory,
-            AnsibleCommandLineConstants.ANSIBLE_PLAYBOOK_COMMAND,
+            workingDirectory.path,
+            RunnerConst.COMMAND_ANSIBLE_PLAYBOOK,
             arguments
         )
     }
@@ -59,7 +52,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
 
         val inventory = config.getInventory()
         if (!inventory.isNullOrEmpty()) {
-            addArgument(arguments, AnsibleCommandLineConstants.INVENTORY_PARAM, inventory)
+            addArgument(arguments, RunnerConst.PARAM_INVENTORY, inventory)
         }
 
         val extraArgs = config.getExtraArgs()
@@ -87,7 +80,21 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         environment[varName] = value
     }
 
-    private fun prepareEnvironment(environment: Map<String, String>): Map<String, String> {
-        return environment
+    private fun prepareEnvironment(environment: Map<String, String>): MutableMap<String, String> {
+        val patchedEnvironment = environment.toMutableMap()
+
+        addEnvironmentVariable(
+            patchedEnvironment,
+            RunnerConst.ENV_FORCE_COLOR,
+            true.toString()
+        )
+
+        addEnvironmentVariable(
+            patchedEnvironment,
+            RunnerConst.ENV_STDOUT_CALLBACK,
+            RunnerConst.CALLBACK_NAME
+        )
+
+        return patchedEnvironment
     }
 }

@@ -6,7 +6,7 @@ import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
-import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants
+import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -26,7 +26,7 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
     }
 
     private fun getSearchPaths(buildAgentConfiguration: BuildAgentConfiguration): MutableList<SearchPath> {
-        val searchPath = buildAgentConfiguration.configurationParameters[AnsibleRunnerConstants.PARAM_SEARCH_PATH]
+        val searchPath = buildAgentConfiguration.configurationParameters[AnsibleRunnerConstants.BUILD_PARAM_SEARCH_PATH]
         val workDirPath = buildAgentConfiguration.workDirectory.toString()
         val result: MutableList<SearchPath> = ArrayList<SearchPath>()
         if (!searchPath.isNullOrBlank()) {
@@ -38,8 +38,8 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
 
     private fun runDetectionCommand(detectionPath: SearchPath): ProcessOutput {
         val commandLine = GeneralCommandLine()
-        commandLine.exePath = AnsibleCommandLineConstants.ANSIBLE_COMMAND
-        commandLine.addParameter(AnsibleCommandLineConstants.VERSION_PARAM)
+        commandLine.exePath = RunnerConst.COMMAND_ANSIBLE
+        commandLine.addParameter(RunnerConst.PARAM_VERSION)
         commandLine.setWorkDirectory(detectionPath.path)
 
         LOG.debug("Detecting Ansible in: $detectionPath")

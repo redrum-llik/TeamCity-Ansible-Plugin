@@ -8,13 +8,7 @@ import jetbrains.buildServer.agent.BuildAgent
 import jetbrains.buildServer.agent.BuildAgentConfiguration
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleDetector
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleInstance
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PATH
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PREFIX
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_VERSION
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_CONFIG_FILE_POSTFIX
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_PATH_POSTFIX
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.AGENT_PARAM_PY_VERSION_POSTFIX
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants.PARAM_SEARCH_PATH
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.util.EventDispatcher
 
 class AnsibleAgentInfoProvider(
@@ -53,22 +47,22 @@ class AnsibleAgentInfoProvider(
         } else {
             LOG.info(
                 "No Ansible instance detected. If it is not available on PATH, " +
-                        "please provide a custom path with $PARAM_SEARCH_PATH agent property."
+                        "please provide a custom path with ${CommonConst.BUILD_PARAM_SEARCH_PATH} agent property."
             )
         }
     }
 
     private fun registerInstances(instances: java.util.HashMap<String, AnsibleInstance>) {
         for (instance in instances.values) {
-            val ansibleVersionedConfigPathName = "${AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${AGENT_PARAM_CONFIG_FILE_POSTFIX}"
+            val ansibleVersionedConfigPathName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_CONFIG_FILE_POSTFIX}"
             if (!instance.configFile.isNullOrEmpty()) {
                 myConfig.addConfigurationParameter(ansibleVersionedConfigPathName, instance.configFile)
             }
 
-            val ansibleVersionedPathName = "${AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${AGENT_PARAM_PATH_POSTFIX}"
+            val ansibleVersionedPathName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_PATH_POSTFIX}"
             myConfig.addConfigurationParameter(ansibleVersionedPathName, instance.executablePath)
 
-            val ansibleVersionedPyVersionName = "${AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${AGENT_PARAM_PY_VERSION_POSTFIX}"
+            val ansibleVersionedPyVersionName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_PY_VERSION_POSTFIX}"
             if (!instance.pythonVersion.isNullOrEmpty()) {
                 myConfig.addConfigurationParameter(ansibleVersionedPyVersionName, instance.pythonVersion)
             }
@@ -76,8 +70,8 @@ class AnsibleAgentInfoProvider(
     }
 
     private fun registerMainInstance(mainInstance: AnsibleInstance) {
-        myConfig.addConfigurationParameter(AGENT_PARAM_ANSIBLE_PATH, mainInstance.version)
-        myConfig.addConfigurationParameter(AGENT_PARAM_ANSIBLE_VERSION, mainInstance.executablePath)
+        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_PATH, mainInstance.version)
+        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_VERSION, mainInstance.executablePath)
     }
 
     companion object {
