@@ -26,4 +26,5 @@ object AnsibleRunnerConstants {
     const val RUNNER_SETTING_EXTRA_ARGS = "Additional arguments"
     const val RUNNER_SETTING_DRY_RUN = "Do a dry run"
     const val RUNNER_SETTING_FAIL_ON_CHANGES = "Fail build if changes are detected"
+    const val RUNNER_COLORED_BUILD_LOG = "Force color the build log"
 }

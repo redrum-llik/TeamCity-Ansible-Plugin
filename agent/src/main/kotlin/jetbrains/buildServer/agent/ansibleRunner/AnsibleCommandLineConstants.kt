@@ -8,13 +8,15 @@ object AnsibleCommandLineConstants {
 
     const val PARAM_VERSION = "--version"
     const val PARAM_CHECK = "--check"
-    const val PARAM_DIFF = "--diff"
     const val PARAM_INVENTORY = "--inventory"
 
     // ansible environment values
 
     const val ENV_FORCE_COLOR = "ANSIBLE_FORCE_COLOR"
     const val ENV_STDOUT_CALLBACK = "ANSIBLE_STDOUT_CALLBACK"
+
+    // used as a callback plugin parameter
+    const val ENV_FAIL_ON_CHANGES = "ANSIBLE_TEAMCITY_FAIL_ON_CHANGES"
 
     // ansible callback data
 

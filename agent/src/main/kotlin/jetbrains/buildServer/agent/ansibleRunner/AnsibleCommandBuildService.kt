@@ -17,7 +17,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         LOG.debug("Going to execute Ansible runner with following parameters: $config")
 
         val arguments = prepareArguments(config)
-        val patchedEnvironment = prepareEnvironment(environmentVariables)
+        val patchedEnvironment = prepareEnvironment(environmentVariables, config)
 
         return SimpleProgramCommandLine(
             patchedEnvironment,
@@ -60,6 +60,10 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
             addArgument(arguments, value = extraArgs)
         }
 
+        if (config.getIsDryRun()) {
+            addArgument(arguments, RunnerConst.PARAM_CHECK)
+        }
+
         val playbook = config.getPlaybook()
         if (!playbook.isNullOrEmpty()) {
             addArgument(arguments, value = playbook)
@@ -80,15 +84,31 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         environment[varName] = value
     }
 
-    private fun prepareEnvironment(environment: Map<String, String>): MutableMap<String, String> {
+    private fun prepareEnvironment(
+        environment: Map<String, String>,
+        config: AnsibleRunnerInstanceConfiguration
+    ): MutableMap<String, String> {
         val patchedEnvironment = environment.toMutableMap()
 
-        addEnvironmentVariable(
-            patchedEnvironment,
-            RunnerConst.ENV_FORCE_COLOR,
-            true.toString()
-        )
+        if (config.getIsLogColored()) {
+            LOG.debug("Forcing colored build log for Ansible playbook execution")
+            addEnvironmentVariable(
+                patchedEnvironment,
+                RunnerConst.ENV_FORCE_COLOR,
+                true.toString()
+            )
+        }
 
+        if (config.getIsFailOnChanges()) {
+            LOG.debug("Will fail build if any changes are detected")
+            addEnvironmentVariable(
+                patchedEnvironment,
+                RunnerConst.ENV_FAIL_ON_CHANGES,
+                true.toString()
+            )
+        }
+
+        LOG.debug("Overriding stdout callback via ${RunnerConst.ENV_STDOUT_CALLBACK} (${RunnerConst.CALLBACK_NAME})")
         addEnvironmentVariable(
             patchedEnvironment,
             RunnerConst.ENV_STDOUT_CALLBACK,

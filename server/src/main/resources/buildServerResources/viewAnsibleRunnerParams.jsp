@@ -17,3 +17,15 @@
 <div class="parameter">
     Additional arguments: <props:displayValue name="${bean.extraArgsKey}" />
 </div>
+
+<div class="parameter">
+    Do a dry run: <props:displayCheckboxValue name="${bean.dryRunKey}" checkedValue="Yes" uncheckedValue="No"/>
+</div>
+
+<div class="parameter">
+    Fail build on changes: <props:displayCheckboxValue name="${bean.failOnChangesKey}" checkedValue="Yes" uncheckedValue="No"/>
+</div>
+
+<div class="parameter">
+    Use colored build: <props:displayCheckboxValue name="${bean.coloredBuildLogKey}" checkedValue="Yes" uncheckedValue="No"/>
+</div>
