@@ -2,7 +2,7 @@ package jetbrains.buildServer.runner.ansibleRunner
 
 import jetbrains.buildServer.requirements.Requirement
 import jetbrains.buildServer.requirements.RequirementType
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import jetbrains.buildServer.serverSide.InvalidProperty
 import jetbrains.buildServer.serverSide.PropertiesProcessor
@@ -35,22 +35,29 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
     }
 
     override fun getType(): String {
-        return AnsibleRunnerConstants.RUNNER_TYPE
+        return CommonConst.RUNNER_TYPE
     }
 
     override fun getDisplayName(): String {
-        return AnsibleRunnerConstants.RUNNER_DISPLAY_NAME
+        return CommonConst.RUNNER_DISPLAY_NAME
     }
 
     override fun getDescription(): String {
-        return AnsibleRunnerConstants.RUNNER_DESCRIPTION
+        return CommonConst.RUNNER_DESCRIPTION
     }
 
     override fun getRunnerSpecificRequirements(runParameters: MutableMap<String, String>): MutableList<Requirement> {
         val result: MutableList<Requirement> = ArrayList<Requirement>()
         result.add(
             Requirement(
-                AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PATH,
+                CommonConst.AGENT_PARAM_ANSIBLE_PATH,
+                null,
+                RequirementType.EXISTS
+            )
+        )
+        result.add(
+            Requirement(
+                CommonConst.AGENT_PARAM_ANSIBLE_CALLBACK_PATH,
                 null,
                 RequirementType.EXISTS
             )
@@ -64,7 +71,7 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
                 if (config.getPlaybook().isNullOrEmpty()) {
-                    ret.add(InvalidProperty(AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
+                    ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
                 }
                 return ret
             }

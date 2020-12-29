@@ -20,6 +20,14 @@ teamcity {
                 useSeparateClassloader = true
             }
         }
+
+        files {
+            into("callback") {
+                from (project(":callback").file("src")) {
+                    include("**/*.py")
+                }
+            }
+        }
     }
 }
 

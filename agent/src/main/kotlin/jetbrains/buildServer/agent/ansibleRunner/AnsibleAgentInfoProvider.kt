@@ -1,20 +1,24 @@
 package jetbrains.buildServer.agent.ansibleRunner
 
-// for the readability, constants are being imported directly
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter
 import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.agent.BuildAgent
 import jetbrains.buildServer.agent.BuildAgentConfiguration
+import jetbrains.buildServer.agent.ansibleRunner.callback.AnsibleCallbackProvider
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleDetector
 import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleInstance
+import jetbrains.buildServer.runner.ansible.getVersionedConfigVarName
+import jetbrains.buildServer.runner.ansible.getVersionedPathVarName
+import jetbrains.buildServer.runner.ansible.getVersionedPyVersionVarName
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.util.EventDispatcher
 
 class AnsibleAgentInfoProvider(
     private val myConfig: BuildAgentConfiguration,
     events: EventDispatcher<AgentLifeCycleListener>,
-    detectors: List<AnsibleDetector>
+    detectors: List<AnsibleDetector>,
+    providers: List<AnsibleCallbackProvider>
 ) {
     private val myHolder = AnsibleInstancesHolder()
     private val LOG = Logger.getInstance(this.javaClass.name)
@@ -24,8 +28,24 @@ class AnsibleAgentInfoProvider(
             object : AgentLifeCycleAdapter() {
                 override fun afterAgentConfigurationLoaded(agent: BuildAgent) {
                     registerDetectedAnsibleInstances(detectors, agent.configuration)
+                    registerAgentSideCallbackFolder(providers, agent.configuration)
                 }
             }
+        )
+    }
+
+    private fun registerAgentSideCallbackFolder(
+        providers: List<AnsibleCallbackProvider>,
+        configuration: BuildAgentConfiguration?
+    ) {
+        val paths = ArrayList<String>()
+        for (provider in providers) {
+            LOG.debug("Fetching callback path from ${provider.javaClass.name}.")
+            paths.add(provider.getCallbackFolderPath())
+        }
+        configuration!!.addConfigurationParameter(
+            CommonConst.AGENT_PARAM_ANSIBLE_CALLBACK_PATH,
+            paths.joinToString(",")
         )
     }
 
@@ -54,15 +74,17 @@ class AnsibleAgentInfoProvider(
 
     private fun registerInstances(instances: java.util.HashMap<String, AnsibleInstance>) {
         for (instance in instances.values) {
-            val ansibleVersionedConfigPathName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_CONFIG_FILE_POSTFIX}"
+            LOG.info("Registering detected Ansible instance at ${instance.executablePath}")
+
+            val ansibleVersionedConfigPathName = getVersionedConfigVarName(instance.version)
             if (!instance.configFile.isNullOrEmpty()) {
                 myConfig.addConfigurationParameter(ansibleVersionedConfigPathName, instance.configFile)
             }
 
-            val ansibleVersionedPathName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_PATH_POSTFIX}"
+            val ansibleVersionedPathName = getVersionedPathVarName(instance.version)
             myConfig.addConfigurationParameter(ansibleVersionedPathName, instance.executablePath)
 
-            val ansibleVersionedPyVersionName = "${CommonConst.AGENT_PARAM_ANSIBLE_PREFIX}_${instance.version}_${CommonConst.AGENT_PARAM_PY_VERSION_POSTFIX}"
+            val ansibleVersionedPyVersionName = getVersionedPyVersionVarName(instance.version)
             if (!instance.pythonVersion.isNullOrEmpty()) {
                 myConfig.addConfigurationParameter(ansibleVersionedPyVersionName, instance.pythonVersion)
             }
@@ -70,8 +92,10 @@ class AnsibleAgentInfoProvider(
     }
 
     private fun registerMainInstance(mainInstance: AnsibleInstance) {
-        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_PATH, mainInstance.version)
-        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_VERSION, mainInstance.executablePath)
+        LOG.info("Registering detected Ansible instance at ${mainInstance.executablePath} as main instance")
+
+        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_VERSION, mainInstance.version)
+        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_PATH, mainInstance.executablePath)
     }
 
     companion object {

@@ -6,4 +6,5 @@
     <bean class="jetbrains.buildServer.agent.ansibleRunner.AnsibleRunnerCommandLineServiceFactory"/>
     <bean class="jetbrains.buildServer.agent.ansibleRunner.AnsibleAgentInfoProvider"/>
     <bean class="jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleCommandLineDetector"/>
+    <bean class="jetbrains.buildServer.agent.ansibleRunner.callback.AnsibleCallbackProviderImpl"/>
 </beans>

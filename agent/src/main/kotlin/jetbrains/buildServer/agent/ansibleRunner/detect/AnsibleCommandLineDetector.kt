@@ -2,25 +2,29 @@ package jetbrains.buildServer.agent.ansibleRunner.detect
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
+import com.intellij.execution.process.ProcessNotCreatedException
 import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
 import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
+import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.HashMap
 
 
-class AnsibleCommandLineDetector() : AnsibleDetector {
+class AnsibleCommandLineDetector : AnsibleDetector {
     private val LOG = Logger.getInstance(this.javaClass.name)
 
     override fun detectAnsibleInstances(buildAgentConfiguration: BuildAgentConfiguration): MutableMap<String, AnsibleInstance> {
         val instances = HashMap<String, AnsibleInstance>()
         for (path in getSearchPaths(buildAgentConfiguration)) {
             val output = runDetectionCommand(path)
-            parseAnsibleInstance(instances, output, path)
+            if (output != null) {
+                parseAnsibleInstance(instances, output, path)
+            }
         }
         return instances
     }
@@ -36,7 +40,7 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
         return result
     }
 
-    private fun runDetectionCommand(detectionPath: SearchPath): ProcessOutput {
+    private fun runDetectionCommand(detectionPath: SearchPath): ProcessOutput? {
         val commandLine = GeneralCommandLine()
         commandLine.exePath = RunnerConst.COMMAND_ANSIBLE
         commandLine.addParameter(RunnerConst.PARAM_VERSION)
@@ -59,9 +63,15 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
         LOG.warn(b.toString())
     }
 
-    private fun handleDetectionProcess(commandLine: GeneralCommandLine): ProcessOutput {
-        val handler = CapturingProcessHandler(commandLine.createProcess(), StandardCharsets.UTF_8)
-        val output = handler.runProcess() ?: throw Exception("Command produced no output.")
+    private fun handleDetectionProcess(commandLine: GeneralCommandLine): ProcessOutput? {
+        val output: ProcessOutput
+        try {
+            val handler = CapturingProcessHandler(commandLine.createProcess(), StandardCharsets.UTF_8)
+            output = handler.runProcess() ?: throw Exception("Command produced no output.")
+        }
+        catch (e: ProcessNotCreatedException) {
+            return null
+        }
         val errorOutput = output.stderr
         if (!errorOutput.isNullOrEmpty()) {
             logDetectionProcessOutput(output)
@@ -108,7 +118,8 @@ class AnsibleCommandLineDetector() : AnsibleDetector {
             // get executable path
             var executablePath = String()
             if (map.containsKey("executable location")) {
-                executablePath = map["executable location"]!!
+                val executableFile = File(map["executable location"]!!)
+                executablePath = executableFile.parentFile.absolutePath
             }
 
             // get Python version
