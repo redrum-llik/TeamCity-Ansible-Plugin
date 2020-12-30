@@ -21,6 +21,8 @@ teamcity {
             }
         }
 
+        archiveName = "ansible-agent"
+
         files {
             into("callback") {
                 from (project(":callback").file("src")) {

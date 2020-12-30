@@ -29,6 +29,7 @@ teamcity {
             description = "Provides runner for Ansible playbook execution"
             useSeparateClassloader = true
         }
+        archiveName = "ansible-plugin"
     }
 
     environments {
