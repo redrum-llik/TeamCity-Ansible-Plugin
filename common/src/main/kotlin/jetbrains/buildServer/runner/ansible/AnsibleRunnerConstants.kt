@@ -5,11 +5,11 @@ object AnsibleRunnerConstants {
     const val RUNNER_DESCRIPTION = "Runner for execution of Ansible playbooks"
     const val RUNNER_DISPLAY_NAME = "Ansible"
     const val RUNNER_TYPE = "ansible-runner"
-    const val JAR_NAME = "ansible-plugin"
     const val CALLBACK_FOLDER = "callback"
 
     // detection variables
     const val BUILD_PARAM_SEARCH_PATH = "teamcity.ansible.detector.search.path"
+
     const val AGENT_PARAM_ANSIBLE_PREFIX = "Ansible"
     const val AGENT_PARAM_VERSION_POSTFIX = "Version"
     const val AGENT_PARAM_CONFIG_FILE_POSTFIX = "ConfigFile"

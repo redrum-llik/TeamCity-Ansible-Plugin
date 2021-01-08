@@ -2,6 +2,7 @@ package jetbrains.buildServer.agent.ansibleRunner
 
 import jetbrains.buildServer.agent.AgentBuildRunnerInfo
 import jetbrains.buildServer.agent.BuildAgentConfiguration
+import jetbrains.buildServer.agent.ansibleRunner.cmd.AnsibleCommandBuildService
 import jetbrains.buildServer.agent.runner.CommandLineBuildService
 import jetbrains.buildServer.agent.runner.CommandLineBuildServiceFactory
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants

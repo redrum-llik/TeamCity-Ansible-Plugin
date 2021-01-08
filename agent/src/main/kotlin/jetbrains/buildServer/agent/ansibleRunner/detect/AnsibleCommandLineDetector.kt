@@ -67,7 +67,10 @@ class AnsibleCommandLineDetector : AnsibleDetector {
         val output: ProcessOutput
         try {
             val handler = CapturingProcessHandler(commandLine.createProcess(), StandardCharsets.UTF_8)
-            output = handler.runProcess() ?: throw Exception("Command produced no output.")
+            output = handler.runProcess()
+            if (output == null) {
+                return null
+            }
         }
         catch (e: ProcessNotCreatedException) {
             return null
@@ -75,7 +78,7 @@ class AnsibleCommandLineDetector : AnsibleDetector {
         val errorOutput = output.stderr
         if (!errorOutput.isNullOrEmpty()) {
             logDetectionProcessOutput(output)
-            throw Exception(errorOutput)
+            return null
         }
         return output
     }
