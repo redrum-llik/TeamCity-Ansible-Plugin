@@ -10,23 +10,19 @@ ext {
     set("teamcityVersion", "2020.2")
 }
 
-group = "jetbrains.buildserver"
-version = System.getenv("BUILD_NUMBER") ?: "1.0-dev"
-
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
-subprojects {
+allprojects {
 
     repositories {
         mavenCentral()
         jcenter()
     }
 
-    group = rootProject.group
-    version = rootProject.version
+    group = "jetbrains.buildserver"
+    version = System.getenv("BUILD_NUMBER") ?: "1.0-dev"
+
+}
+
+subprojects {
 
     tasks.withType<Zip> {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE

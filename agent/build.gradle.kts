@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile(project(":common"))
+    implementation(kotlin("stdlib"))
+    implementation(project(":common"))
 
 }
 
@@ -34,12 +34,12 @@ teamcity {
 }
 
 tasks.withType<Jar> {
-    baseName = "ansible-agent"
+    archiveBaseName.set("ansible-agent")
 }
 
 tasks["agentPlugin"].doLast {
     val zipTask = tasks["agentPlugin"] as Zip
-    val zipFile = zipTask.archivePath
+    val zipFile = zipTask.archiveFile.get().asFile
 
     val entries = zipFile.inputStream().use { it ->
         ZipInputStream(it).use { z ->
