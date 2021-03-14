@@ -21,7 +21,9 @@ object AnsibleRunnerConstants {
     const val AGENT_PARAM_ANSIBLE_CALLBACK_PATH = "${AGENT_PARAM_ANSIBLE_PREFIX}_Callback_${AGENT_PARAM_PATH_POSTFIX}"
 
     // ansible bean parameters
+    const val RUNNER_SETTING_PLAYBOOK_MODE = "Playbook mode file/script"
     const val RUNNER_SETTING_PLAYBOOK_FILE = "Playbook file"
+    const val RUNNER_SETTING_PLAYBOOK_YAML = "Playbook YAML"
     const val RUNNER_SETTING_INVENTORY_FILE = "Inventory file"
     const val RUNNER_SETTING_EXTRA_ARGS = "Additional arguments"
     const val RUNNER_SETTING_DRY_RUN = "Do a dry run"

@@ -6,9 +6,17 @@
 <jsp:useBean id="bean" class="jetbrains.buildServer.runner.ansibleRunner.AnsibleBean"/>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
-<div class="parameter">
-    Playbook: <props:displayValue name="${bean.playbookFileKey}" />
-</div>
+<c:if test="${propertiesBean.properties[bean.playbookModeKey] eq bean.playbookModeFile}">
+    <div class="parameter">
+        Playbook: <props:displayValue name="${bean.playbookFileKey}" />
+    </div>
+</c:if>
+
+<c:if test="${propertiesBean.properties[bean.playbookModeKey] eq bean.playbookModeYaml}">
+    <div class="parameter">
+        Playbook YAML: <props:displayValue name="${bean.playbookYamlKey}" />
+    </div>
+</c:if>
 
 <div class="parameter">
     Inventory: <props:displayValue name="${bean.inventoryFileKey}" />

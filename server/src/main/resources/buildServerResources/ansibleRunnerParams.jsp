@@ -9,8 +9,29 @@
 <forms:workingDirectory/>
 
 <l:settingsGroup title="Ansible Parameters">
+    <tr>
+        <th>Playbook type:</th>
+        <td>
+            <props:selectProperty name="${bean.playbookModeKey}" id="playbook_option" className="shortField"
+                                  onchange="BS.Ansible.updatePlaybookType()">
+                <props:option value="${bean.playbookModeFile}">File</props:option>
+                <props:option value="${bean.playbookModeYaml}">YAML</props:option>
+            </props:selectProperty>
+            <span class="error" id="error_${bean.playbookModeKey}"></span>
+        </td>
+    </tr>
+
+    <tr id="playbook_yaml">
+        <th><label for="${bean.playbookYamlKey}">Playbook YAML:<l:star/></label></th>
+        <td class="codeHighlightTD">
+            <props:multilineProperty name="${bean.playbookYamlKey}" linkTitle="Enter Playbook YAML content" cols="58"
+                                     rows="10" highlight="yaml" expanded="${true}"
+                                     note="Enter contents of your Playbook. TeamCity references will be replaced."/>
+        </td>
+    </tr>
+
     <tr id="playbook_file">
-        <th><label for="${bean.playbookFileKey}">Playbook:</label></th>
+        <th><label for="${bean.playbookFileKey}">Playbook:<l:star/></label></th>
         <td>
             <props:textProperty name="${bean.playbookFileKey}" className="longField"/>
             <bs:vcsTree fieldId="${bean.playbookFileKey}"/>
@@ -61,3 +82,22 @@
         </td>
     </tr>
 </l:settingsGroup>
+
+<script type="text/javascript">
+    BS.Ansible = {
+        updatePlaybookType : function () {
+            const val = $('playbook_option').value;
+            if (val === '${bean.playbookModeYaml}') {
+                BS.Util.hide($('playbook_file'));
+                BS.Util.show($('playbook_yaml'));
+            }
+            if (val === '${bean.playbookModeFile}') {
+                BS.Util.hide($('playbook_yaml'))
+                BS.Util.show($('playbook_file'))
+            }
+            BS.MultilineProperties.updateVisible()
+        }
+    }
+
+    BS.Ansible.updatePlaybookType();
+</script>
