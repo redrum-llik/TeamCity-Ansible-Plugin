@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Tests for Ansible runner agent">
+    <test name="Tests for Ansible runner agent">
+        <classes>
+            <class name="jetbrains.buildServer.agent.ansibleRunner.cmd.CommandLineBuilderTest"/>
+<!--            <class name="jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleCommandLineDetectorTest"/>-->
+<!--            <class name="jetbrains.buildServer.agent.ansibleRunner.AnsibleAgentInfoProviderTest"/>-->
+        </classes>
+    </test>
+</suite>

@@ -6,9 +6,8 @@ plugins {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile(project(":common"))
-
+    testImplementation ("org.testng:testng:6.9.9")
+    testImplementation ("org.assertj:assertj-core:2.1.0")
 }
 
 teamcity {
@@ -25,7 +24,7 @@ teamcity {
 
         files {
             into("callback") {
-                from (project(":callback").file("src")) {
+                from(project(":callback").file("src")) {
                     include("**/*.py")
                 }
             }
@@ -35,6 +34,12 @@ teamcity {
 
 tasks.withType<Jar> {
     baseName = "ansible-agent"
+}
+
+tasks.getByName<Test>("test") {
+    useTestNG {
+        suites("/src/test/agent-tests.xml")
+    }
 }
 
 tasks["agentPlugin"].doLast {

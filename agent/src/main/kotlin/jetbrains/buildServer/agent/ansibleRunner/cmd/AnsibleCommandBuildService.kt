@@ -31,6 +31,11 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         config: AnsibleRunnerInstanceConfiguration,
         builder: CommandLineBuilder
     ): CommandLineBuilder {
+        val playbook = config.getPlaybook()
+        if (!playbook.isNullOrEmpty()) {
+            builder.addArgument(value = playbook)
+        }
+
         val inventory = config.getInventory()
         if (!inventory.isNullOrEmpty()) {
             builder.addArgument(RunnerConst.PARAM_INVENTORY, inventory)
@@ -43,11 +48,6 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
 
         if (config.getIsDryRun()) {
             builder.addArgument(RunnerConst.PARAM_CHECK)
-        }
-
-        val playbook = config.getPlaybook()
-        if (!playbook.isNullOrEmpty()) {
-            builder.addArgument(value = playbook)
         }
 
         return builder
