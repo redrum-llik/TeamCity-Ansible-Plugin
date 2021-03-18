@@ -6,6 +6,8 @@ plugins {
 }
 
 dependencies {
+    implementation(kotlin("stdlib"))
+    implementation(project(":common"))
     testImplementation ("org.testng:testng:6.9.9")
     testImplementation ("org.assertj:assertj-core:2.1.0")
 }
@@ -24,7 +26,7 @@ teamcity {
 
         files {
             into("callback") {
-                from(project(":callback").file("src")) {
+                from (project(":callback").file("src")) {
                     include("**/*.py")
                 }
             }
@@ -33,18 +35,12 @@ teamcity {
 }
 
 tasks.withType<Jar> {
-    baseName = "ansible-agent"
-}
-
-tasks.getByName<Test>("test") {
-    useTestNG {
-        suites("/src/test/agent-tests.xml")
-    }
+    archiveBaseName.set("ansible-agent")
 }
 
 tasks["agentPlugin"].doLast {
     val zipTask = tasks["agentPlugin"] as Zip
-    val zipFile = zipTask.archivePath
+    val zipFile = zipTask.archiveFile.get().asFile
 
     val entries = zipFile.inputStream().use { it ->
         ZipInputStream(it).use { z ->

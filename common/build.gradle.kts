@@ -4,8 +4,9 @@ plugins {
 }
 
 dependencies {
-        testImplementation ("org.testng:testng:6.9.9")
-        testImplementation ("org.assertj:assertj-core:2.1.0")
+    compile(kotlin("stdlib"))
+    testImplementation ("org.testng:testng:6.9.9")
+    testImplementation ("org.assertj:assertj-core:2.1.0")
 }
 
 
