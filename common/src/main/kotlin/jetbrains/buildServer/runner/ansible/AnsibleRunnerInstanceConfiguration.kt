@@ -1,10 +1,17 @@
 package jetbrains.buildServer.runner.ansible
 
 class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, String>) {
-    fun getPlaybook(): String? {
-        //TODO: implement reading playbook from a file. Users will enter the file path relative to checkout directory.
-        //  This function probably have to try to get YAML first and throw if this is not possible. The exception can be
-        //  caught: catch section should make sure the file exists and read from it.
+    fun getPlaybookMode(): AnsiblePlaybookType {
+        return AnsiblePlaybookType.valueOf(
+            properties[AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_MODE]!!
+        )
+    }
+
+    fun getPlaybookFilePath(): String? {
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_FILE]
+    }
+
+    fun getPlaybookYaml(): String? {
         return properties[AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_YAML]
     }
 

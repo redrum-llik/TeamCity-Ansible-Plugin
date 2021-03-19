@@ -5,8 +5,8 @@ import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonCons
 
 class AnsibleBean {
     val playbookModeKey: String = CommonConst.RUNNER_SETTING_PLAYBOOK_MODE
-    val playbookModeFile: String = AnsiblePlaybookType.FILE.id
-    val playbookModeYaml: String = AnsiblePlaybookType.YAML.id
+    val playbookModeFile: String = AnsiblePlaybookType.File.toString()
+    val playbookModeYaml: String = AnsiblePlaybookType.YAML.toString()
     val playbookFileKey: String = CommonConst.RUNNER_SETTING_PLAYBOOK_FILE
     val playbookYamlKey: String = CommonConst.RUNNER_SETTING_PLAYBOOK_YAML
     val inventoryFileKey: String = CommonConst.RUNNER_SETTING_INVENTORY_FILE

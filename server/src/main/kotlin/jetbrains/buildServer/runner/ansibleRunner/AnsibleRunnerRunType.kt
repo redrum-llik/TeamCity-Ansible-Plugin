@@ -70,7 +70,7 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
             override fun process(properties: MutableMap<String, String>): MutableCollection<InvalidProperty> {
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
-                if (config.getPlaybook().isNullOrEmpty()) {
+                if (config.getPlaybookFilePath().isNullOrEmpty()) {
                     ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
                 }
                 return ret

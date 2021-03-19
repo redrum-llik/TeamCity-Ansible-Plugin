@@ -3,10 +3,12 @@ package jetbrains.buildServer.agent.ansibleRunner.cmd
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
+import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import java.io.File
 import java.nio.file.NoSuchFileException
+import java.util.*
 import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 
 class AnsibleCommandBuildService : BuildServiceAdapter() {
@@ -27,6 +29,24 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         return builder.build()
     }
 
+    private fun getPlaybookFilePath(
+        config: AnsibleRunnerInstanceConfiguration
+    ): String {
+        return when (config.getPlaybookMode()) {
+            AnsiblePlaybookType.File -> config.getPlaybookFilePath()!!
+            AnsiblePlaybookType.YAML -> savePlaybookToFile(config)
+        }
+    }
+
+    private fun savePlaybookToFile(
+        config: AnsibleRunnerInstanceConfiguration
+    ): String {
+        val playbook = config.getPlaybookYaml()
+        val playbookFile = File(build.buildTempDirectory.absolutePath, "custom_playbook_${UUID.randomUUID()}.yml")
+        playbookFile.writeText(playbook!!)
+        return playbookFile.normalize().absolutePath
+    }
+
     private fun prepareArguments(
         config: AnsibleRunnerInstanceConfiguration,
         builder: CommandLineBuilder
@@ -45,10 +65,8 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
             builder.addArgument(RunnerConst.PARAM_CHECK)
         }
 
-        val playbook = config.getPlaybook()
-        if (!playbook.isNullOrEmpty()) {
-            builder.addArgument(value = playbook)
-        }
+        val playbookPath = getPlaybookFilePath(config)
+        builder.addArgument(value = playbookPath)
 
         return builder
     }

@@ -25,8 +25,7 @@
         <th><label for="${bean.playbookYamlKey}">Playbook YAML:<l:star/></label></th>
         <td class="codeHighlightTD">
             <props:multilineProperty name="${bean.playbookYamlKey}" linkTitle="Enter Playbook YAML content" cols="58"
-                                     rows="10" highlight="yaml" expanded="${true}"
-                                     note="Enter contents of your Playbook. TeamCity references will be replaced."/>
+                                     rows="10" highlight="yaml" expanded="${true}"/>
         </td>
     </tr>
 
