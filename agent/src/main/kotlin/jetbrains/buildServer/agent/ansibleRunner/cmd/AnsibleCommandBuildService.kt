@@ -78,13 +78,13 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
                 throw NoSuchFileException("Runner expects custom callback path in order to process the Ansible output")
             }
             currentCallbackPluginPaths == null -> {
-                "${RunnerConst.ENV_DEFAULT_CALLBACK_PLUGIN_PATH_VALUE},$callbackFolderPath"
+                "$callbackFolderPath:${RunnerConst.ENV_DEFAULT_CALLBACK_PLUGIN_PATH_VALUE}"
             }
             currentCallbackPluginPaths.isEmpty() -> {
                 callbackFolderPath
             }
             else -> {
-                "$currentCallbackPluginPaths,$callbackFolderPath"
+                "$callbackFolderPath:$currentCallbackPluginPaths"
             }
         }
     }

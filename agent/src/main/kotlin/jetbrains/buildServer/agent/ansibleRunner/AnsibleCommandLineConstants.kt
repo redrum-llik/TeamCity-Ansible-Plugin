@@ -13,8 +13,8 @@ object AnsibleCommandLineConstants {
     // ansible environment values
 
     const val ENV_FORCE_COLOR = "ANSIBLE_FORCE_COLOR"
-    const val ENV_STDOUT_CALLBACK = "DEFAULT_STDOUT_CALLBACK"
-    const val ENV_DEFAULT_CALLBACK_PLUGIN_PATH = "DEFAULT_CALLBACK_PLUGIN_PATH"
+    const val ENV_STDOUT_CALLBACK = "ANSIBLE_STDOUT_CALLBACK"
+    const val ENV_DEFAULT_CALLBACK_PLUGIN_PATH = "ANSIBLE_CALLBACK_PLUGINS"
 
     const val ENV_DEFAULT_CALLBACK_PLUGIN_PATH_VALUE = "~/.ansible/plugins/callback:/usr/share/ansible/plugins/callback"
 
