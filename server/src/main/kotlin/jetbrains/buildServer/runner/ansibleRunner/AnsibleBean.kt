@@ -13,5 +13,6 @@ class AnsibleBean {
     val extraArgsKey: String = CommonConst.RUNNER_SETTING_EXTRA_ARGS
     val dryRunKey: String = CommonConst.RUNNER_SETTING_DRY_RUN
     val failOnChangesKey: String = CommonConst.RUNNER_SETTING_FAIL_ON_CHANGES
-    val coloredBuildLogKey: String = CommonConst.RUNNER_COLORED_BUILD_LOG
+    val coloredBuildLogKey: String = CommonConst.RUNNER_SETTING_COLORED_BUILD_LOG
+    val doPassConfigParams: String = CommonConst.RUNNER_SETTING_DO_PASS_CONFIG_PARAMS
 }

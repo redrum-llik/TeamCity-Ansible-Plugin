@@ -80,6 +80,14 @@
             <br/>
         </td>
     </tr>
+
+    <tr class="advancedSetting">
+        <th><label>Pass configuration parameters to command:</label></th>
+        <td><props:checkboxProperty name="${bean.doPassConfigParams}"/>
+            <label for="${bean.doPassConfigParams}">Pass TeamCity configuration parameters as "--extra-vars" argument</label>
+            <br/>
+        </td>
+    </tr>
 </l:settingsGroup>
 
 <script type="text/javascript">

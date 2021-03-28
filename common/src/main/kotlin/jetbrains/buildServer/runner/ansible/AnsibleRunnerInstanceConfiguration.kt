@@ -3,7 +3,8 @@ package jetbrains.buildServer.runner.ansible
 class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, String>) {
     fun getPlaybookMode(): AnsiblePlaybookType {
         return AnsiblePlaybookType.valueOf(
-            properties[AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_MODE]!!
+            properties[AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_MODE]
+                ?: error("Playbook mode not set")
         )
     }
 
@@ -32,6 +33,10 @@ class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, Str
     }
 
     fun getIsLogColored(): Boolean {
-        return properties[AnsibleRunnerConstants.RUNNER_COLORED_BUILD_LOG].toBoolean()
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_COLORED_BUILD_LOG].toBoolean()
+    }
+
+    fun getDoPassConfigParams(): Boolean {
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_DO_PASS_CONFIG_PARAMS].toBoolean()
     }
 }

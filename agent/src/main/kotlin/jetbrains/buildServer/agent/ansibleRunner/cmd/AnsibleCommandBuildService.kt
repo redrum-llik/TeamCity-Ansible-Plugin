@@ -1,5 +1,6 @@
 package jetbrains.buildServer.agent.ansibleRunner.cmd
 
+import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
@@ -7,6 +8,7 @@ import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import java.io.File
+import java.io.FileWriter
 import java.nio.file.NoSuchFileException
 import java.util.*
 import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
@@ -42,9 +44,26 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         config: AnsibleRunnerInstanceConfiguration
     ): String {
         val playbook = config.getPlaybookYaml()
-        val playbookFile = File(build.buildTempDirectory.absolutePath, "custom_playbook_${UUID.randomUUID()}.yml")
+        val playbookFile = File(buildTempDirectory.absolutePath, "custom_playbook_${UUID.randomUUID()}.yml")
         playbookFile.writeText(playbook!!)
         return playbookFile.normalize().absolutePath
+    }
+
+    private fun saveArgumentsToFile(
+    ): String {
+        val gson = Gson()
+        val varFile = File(
+            buildTempDirectory.absolutePath,
+            "ansible_varfile_${UUID.randomUUID()}.json"
+        ).normalize()
+        val writer = FileWriter(varFile)
+        val json = gson.toJson(configParameters)
+        writer.run {
+            write(json)
+            close()
+        }
+
+        return "@${varFile.absolutePath}"
     }
 
     private fun prepareArguments(
@@ -59,6 +78,14 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         val extraArgs = config.getExtraArgs()
         if (!extraArgs.isNullOrEmpty()) {
             builder.addArgument(value = extraArgs)
+        }
+
+        val doPassConfigParams = config.getDoPassConfigParams()
+        if (doPassConfigParams) {
+            builder.addArgument(
+                RunnerConst.PARAM_EXTRA_VARS,
+                saveArgumentsToFile()
+            )
         }
 
         if (config.getIsDryRun()) {

@@ -96,6 +96,7 @@ class AnsibleAgentInfoProvider(
 
         myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_VERSION, mainInstance.version)
         myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_PATH, mainInstance.executablePath)
+        myConfig.addConfigurationParameter(CommonConst.AGENT_PARAM_ANSIBLE_PY_VERSION, mainInstance.pythonVersion)
     }
 
     companion object {

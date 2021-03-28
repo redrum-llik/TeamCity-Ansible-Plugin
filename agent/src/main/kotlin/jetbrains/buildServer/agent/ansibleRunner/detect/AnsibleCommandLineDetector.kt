@@ -126,12 +126,13 @@ class AnsibleCommandLineDetector : AnsibleDetector {
             }
 
             // get Python version
-            var pythonVersion: String? = String()
+            var pythonVersion = String()
             if (map.containsKey("python version")) {
-                val result = pythonVersionPattern.find(map["python version"]!!)
-                if (result != null) {
-                    pythonVersion = result.groupValues[0]
+                val pyVersion = pythonVersionPattern.find(map["python version"]!!)
+                if (pyVersion == null) {
+                    throw Exception("Could not parse Python version used by Ansible instance.")
                 }
+                pythonVersion = pyVersion.groupValues[0]
             }
 
             instances[version] = AnsibleInstance(

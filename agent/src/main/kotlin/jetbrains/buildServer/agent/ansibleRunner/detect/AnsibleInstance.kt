@@ -4,7 +4,7 @@ data class AnsibleInstance(
     val version: String,
     val configFile: String?,
     val executablePath: String,
-    val pythonVersion: String?,
+    val pythonVersion: String,
     val isDefault: Boolean
 ) : Comparable<AnsibleInstance> {
     override fun compareTo(other: AnsibleInstance): Int {

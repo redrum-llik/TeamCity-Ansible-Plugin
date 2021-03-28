@@ -2,6 +2,7 @@ package jetbrains.buildServer.runner.ansibleRunner
 
 import jetbrains.buildServer.requirements.Requirement
 import jetbrains.buildServer.requirements.RequirementType
+import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import jetbrains.buildServer.serverSide.InvalidProperty
@@ -31,7 +32,8 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
 
     override fun getDefaultRunnerProperties(): MutableMap<String, String> {
         val map: MutableMap<String, String> = HashMap()
-        return map;
+        map[CommonConst.RUNNER_SETTING_PLAYBOOK_MODE] = CommonConst.RUNNER_SETTING_PLAYBOOK_FILE
+        return map
     }
 
     override fun getType(): String {
@@ -62,6 +64,13 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
                 RequirementType.EXISTS
             )
         )
+        result.add(
+            Requirement(
+                CommonConst.AGENT_PARAM_ANSIBLE_PY_VERSION,
+                "3.0.0",
+                RequirementType.VER_NO_LESS_THAN
+            )
+        )
         return result
     }
 
@@ -70,9 +79,19 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
             override fun process(properties: MutableMap<String, String>): MutableCollection<InvalidProperty> {
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
-                if (config.getPlaybookFilePath().isNullOrEmpty()) {
-                    ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
+                when (config.getPlaybookMode()) {
+                    AnsiblePlaybookType.File -> if (config.getPlaybookFilePath().isNullOrEmpty()) {
+                        ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
+                    }
+                    AnsiblePlaybookType.YAML -> if (config.getPlaybookYaml().isNullOrEmpty()) {
+                        ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_YAML, "Required parameter"))
+                    }
                 }
+
+                if (config.getInventory().isNullOrEmpty()) {
+                    ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_INVENTORY_FILE, "Required parameter"))
+                }
+
                 return ret
             }
         }

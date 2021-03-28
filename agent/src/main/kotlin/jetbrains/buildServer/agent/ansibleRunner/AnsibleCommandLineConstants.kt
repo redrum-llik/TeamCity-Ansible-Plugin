@@ -9,6 +9,7 @@ object AnsibleCommandLineConstants {
     const val PARAM_VERSION = "--version"
     const val PARAM_CHECK = "--check"
     const val PARAM_INVENTORY = "--inventory"
+    const val PARAM_EXTRA_VARS = "--extra-vars"
 
     // ansible environment values
 

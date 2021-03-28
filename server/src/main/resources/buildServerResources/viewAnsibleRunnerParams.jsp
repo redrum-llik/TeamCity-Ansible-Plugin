@@ -37,3 +37,7 @@
 <div class="parameter">
     Use colored build: <props:displayCheckboxValue name="${bean.coloredBuildLogKey}" checkedValue="Yes" uncheckedValue="No"/>
 </div>
+
+<div class="parameter">
+    Pass configuration parameters: <props:displayCheckboxValue name="${bean.doPassConfigParams}" checkedValue="Yes" uncheckedValue="No"/>
+</div>
