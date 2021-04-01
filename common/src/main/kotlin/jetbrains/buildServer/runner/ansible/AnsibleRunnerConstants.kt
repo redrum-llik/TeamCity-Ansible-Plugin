@@ -7,6 +7,9 @@ object AnsibleRunnerConstants {
     const val RUNNER_TYPE = "ansible-runner"
     const val CALLBACK_FOLDER = "callback"
 
+    // prefix for Ansible system parameters
+    const val BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX = "ansible."
+
     // detection variables
     const val BUILD_PARAM_SEARCH_PATH = "teamcity.ansible.detector.search.path"
 
@@ -22,15 +25,13 @@ object AnsibleRunnerConstants {
     const val AGENT_PARAM_ANSIBLE_CALLBACK_PATH = "${AGENT_PARAM_ANSIBLE_PREFIX}.callback.${AGENT_PARAM_PATH_POSTFIX}"
 
     // ansible bean parameters
-    const val RUNNER_SETTING_PLAYBOOK_MODE = "Playbook mode: file/script"
-    const val RUNNER_SETTING_PLAYBOOK_FILE = "Playbook file"
-    const val RUNNER_SETTING_PLAYBOOK_YAML = "Playbook YAML"
-    const val RUNNER_SETTING_INVENTORY_FILE = "Inventory file"
-    const val RUNNER_SETTING_EXTRA_ARGS = "Additional arguments"
-    const val RUNNER_SETTING_DRY_RUN = "Do a dry run"
-    const val RUNNER_SETTING_FAIL_ON_CHANGES = "Fail build if changes are detected"
-    const val RUNNER_SETTING_COLORED_BUILD_LOG = "Force color the build log"
-    const val RUNNER_SETTING_DO_PASS_CONFIG_PARAMS = "Pass configuration parameters"
+    const val RUNNER_SETTING_PLAYBOOK_MODE = "playbookMode"
+    const val RUNNER_SETTING_PLAYBOOK_FILE = "playbookFile"
+    const val RUNNER_SETTING_PLAYBOOK_YAML = "playbookYaml"
+    const val RUNNER_SETTING_INVENTORY_FILE = "inventoryFile"
+    const val RUNNER_SETTING_ADDITIONAL_ARGS = "additionalArguments"
+    const val RUNNER_SETTING_FAIL_IF_CHANGES = "failIfChanges"
+    const val RUNNER_SETTING_FORCE_COLORED_LOG = "forceColoredLog"
 }
 
 fun getVersionedAnsibleVarPrefix(version: String) : String {

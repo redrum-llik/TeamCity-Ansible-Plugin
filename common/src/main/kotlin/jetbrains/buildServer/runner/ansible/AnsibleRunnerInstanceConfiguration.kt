@@ -21,22 +21,14 @@ class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, Str
     }
 
     fun getExtraArgs(): String? {
-        return properties[AnsibleRunnerConstants.RUNNER_SETTING_EXTRA_ARGS]
-    }
-
-    fun getIsDryRun(): Boolean {
-        return properties[AnsibleRunnerConstants.RUNNER_SETTING_DRY_RUN].toBoolean()
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_ADDITIONAL_ARGS]
     }
 
     fun getIsFailOnChanges(): Boolean {
-        return properties[AnsibleRunnerConstants.RUNNER_SETTING_FAIL_ON_CHANGES].toBoolean()
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_FAIL_IF_CHANGES].toBoolean()
     }
 
     fun getIsLogColored(): Boolean {
-        return properties[AnsibleRunnerConstants.RUNNER_SETTING_COLORED_BUILD_LOG].toBoolean()
-    }
-
-    fun getDoPassConfigParams(): Boolean {
-        return properties[AnsibleRunnerConstants.RUNNER_SETTING_DO_PASS_CONFIG_PARAMS].toBoolean()
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_FORCE_COLORED_LOG].toBoolean()
     }
 }

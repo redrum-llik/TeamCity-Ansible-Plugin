@@ -35,7 +35,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         config: AnsibleRunnerInstanceConfiguration
     ): String {
         return when (config.getPlaybookMode()) {
-            AnsiblePlaybookType.File -> config.getPlaybookFilePath()!!
+            AnsiblePlaybookType.FILE -> config.getPlaybookFilePath()!!
             AnsiblePlaybookType.YAML -> savePlaybookToFile(config)
         }
     }
@@ -49,6 +49,15 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         return playbookFile.normalize().absolutePath
     }
 
+    private fun checkAnsiblePrefixedSystemParameters(): Boolean {
+        systemProperties.forEach { param ->
+            if (param.key.startsWith(CommonConst.BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX)) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun saveArgumentsToFile(
     ): String {
         val gson = Gson()
@@ -57,7 +66,11 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
             "ansible_varfile_${UUID.randomUUID()}.json"
         ).normalize()
         val writer = FileWriter(varFile)
-        val json = gson.toJson(configParameters)
+        val json = gson.toJson(
+            systemProperties.filterKeys {
+                it.startsWith(CommonConst.BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX)
+            }
+        )
         writer.run {
             write(json)
             close()
@@ -80,15 +93,14 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
             builder.addArgument(value = extraArgs)
         }
 
-        val doPassConfigParams = config.getDoPassConfigParams()
-        if (doPassConfigParams) {
+        if (checkAnsiblePrefixedSystemParameters()) {
             builder.addArgument(
                 RunnerConst.PARAM_EXTRA_VARS,
                 saveArgumentsToFile()
             )
         }
 
-        if (config.getIsDryRun()) {
+        if (config.getIsFailOnChanges()) {
             builder.addArgument(RunnerConst.PARAM_CHECK)
         }
 

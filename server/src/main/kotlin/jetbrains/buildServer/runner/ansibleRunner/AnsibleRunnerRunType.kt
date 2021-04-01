@@ -80,7 +80,7 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
                 when (config.getPlaybookMode()) {
-                    AnsiblePlaybookType.File -> if (config.getPlaybookFilePath().isNullOrEmpty()) {
+                    AnsiblePlaybookType.FILE -> if (config.getPlaybookFilePath().isNullOrEmpty()) {
                         ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_PLAYBOOK_FILE, "Required parameter"))
                     }
                     AnsiblePlaybookType.YAML -> if (config.getPlaybookYaml().isNullOrEmpty()) {

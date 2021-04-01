@@ -24,7 +24,6 @@ object AnsibleCommandLineConstants {
 
     // ansible callback data
 
-    const val CALLBACK_ADJACENT_DIR = "callback_plugins"
     const val CALLBACK_NAME = "teamcity_callback"
 
 }
