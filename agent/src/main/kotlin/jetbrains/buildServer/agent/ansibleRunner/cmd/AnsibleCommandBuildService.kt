@@ -23,12 +23,20 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         val builder = CommandLineBuilder()
         prepareArguments(config, builder)
         prepareEnvironment(config, builder)
-        builder.executablePath = File(
-            configParameters[CommonConst.AGENT_PARAM_ANSIBLE_PATH]!!, RunnerConst.COMMAND_ANSIBLE_PLAYBOOK
-        ).absolutePath
+        builder.executablePath = getExecutablePath()
         builder.workingDir = workingDirectory.path
 
         return builder.build()
+    }
+
+    private fun getExecutablePath(): String {
+        if (runnerContext.isVirtualContext) {
+            return RunnerConst.COMMAND_ANSIBLE_PLAYBOOK
+        }
+        return File(
+            configParameters[CommonConst.AGENT_PARAM_ANSIBLE_PATH]!!,
+            RunnerConst.COMMAND_ANSIBLE_PLAYBOOK
+        ).absolutePath
     }
 
     private fun getPlaybookFilePath(
