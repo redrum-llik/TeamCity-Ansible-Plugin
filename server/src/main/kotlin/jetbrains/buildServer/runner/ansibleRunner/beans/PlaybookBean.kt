@@ -2,9 +2,6 @@ package jetbrains.buildServer.runner.ansibleRunner.beans
 
 import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
-import java.util.*
-import java.util.stream.Collectors
-import kotlin.collections.HashMap
 
 class PlaybookBean {
     val key = AnsibleRunnerConstants.RUNNER_SETTING_PLAYBOOK_MODE

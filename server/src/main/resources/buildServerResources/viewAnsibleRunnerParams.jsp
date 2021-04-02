@@ -11,30 +11,36 @@
 <jsp:useBean id="playbookBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PlaybookBean"/>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
-<c:if test="${propertiesBean.properties[playbookBean.key] eq playbookBean.fileKey}">
+<props:viewWorkingDirectory />
+
+<c:if test="${propertiesBean.properties[playbookBean.key] == playbookBean.fileModeKey}">
     <div class="parameter">
-        ${playbookBean.fileLabel}<props:displayValue name="${playbookBean.fileKey}" />
+        ${playbookBean.fileLabel} <props:displayValue name="${playbookBean.fileKey}" />
     </div>
 </c:if>
 
-<c:if test="${propertiesBean.properties[playbookBean.key] eq playbookBean.yamlKey}">
+<c:if test="${propertiesBean.properties[playbookBean.key] == playbookBean.yamlModeKey}">
     <div class="parameter">
-        ${playbookBean.yamlLabel}<props:displayValue name="${playbookBean.yamlKey}" />
+        ${playbookBean.yamlLabel} <props:displayValue name="${playbookBean.yamlKey}" />
     </div>
 </c:if>
 
 <div class="parameter">
-    ${inventoryBean.label}<props:displayValue name="${inventoryBean.key}" />
+    ${inventoryBean.label} <props:displayValue name="${inventoryBean.key}" />
+</div>
+
+<c:set var="additionalArguments" value="${propertiesBean.properties[additionalArgumentsBean.key]}"/>
+
+<c:if test="${not empty additionalArguments}">
+    <div class="parameter">
+            ${additionalArgumentsBean.label} <props:displayValue name="${additionalArgumentsBean.key}" />
+    </div>
+</c:if>
+
+<div class="parameter">
+    ${failIfChangesBean.label} <props:displayCheckboxValue name="${failIfChangesBean.key}" checkedValue="Yes" uncheckedValue="No"/>
 </div>
 
 <div class="parameter">
-    ${additionalArgumentsBean.label}<props:displayValue name="${additionalArgumentsBean.key}" />
-</div>
-
-<div class="parameter">
-    ${failIfChangesBean.label}<props:displayCheckboxValue name="${failIfChangesBean.key}" checkedValue="Yes" uncheckedValue="No"/>
-</div>
-
-<div class="parameter">
-    Use colored build: <props:displayCheckboxValue name="${bean.coloredBuildLogKey}" checkedValue="Yes" uncheckedValue="No"/>
+    ${forceColoredLogBean.label} <props:displayCheckboxValue name="${forceColoredLogBean.key}" checkedValue="Yes" uncheckedValue="No"/>
 </div>
