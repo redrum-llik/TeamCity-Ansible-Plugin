@@ -6,7 +6,7 @@ This project aims to provide a simple Ansible playbook runner for TeamCity. The 
 * automatic detection of `ansible-playbook` executable on the agent side
 * ability to pass system parameters as `--extra-vars`
 
-The sheduled features to be added in the future:
+The scheduled features to be added in the future:
 * a report tab with a simple HTML report based on the playbook output/results
 
 Example of the build log output:
