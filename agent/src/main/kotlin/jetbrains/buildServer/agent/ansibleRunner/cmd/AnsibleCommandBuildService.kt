@@ -24,7 +24,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         prepareArguments(config, builder)
         prepareEnvironment(config, builder)
         builder.executablePath = getExecutablePath()
-        builder.workingDir = workingDirectory.path
+        builder.workingDir = runnerContext.workingDirectory.path
 
         return builder.build()
     }
