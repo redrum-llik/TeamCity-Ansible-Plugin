@@ -20,15 +20,8 @@ teamcity {
     version = rootProject.ext["teamcityVersion"] as String
 
     server {
-        descriptor {
-            name = "ansibleSupport"
-            displayName = "Ansible Support"
-            version = rootProject.version as String?
-            vendorName = "JetBrains"
-            vendorUrl = "https://jetbrains.com"
-            description = "Provides runner for Ansible playbook execution"
-            useSeparateClassloader = true
-        }
+        descriptor = file("teamcity-plugin.xml")
+        tokens = mapOf("Version" to rootProject.version)
         archiveName = "ansible-plugin"
     }
 
