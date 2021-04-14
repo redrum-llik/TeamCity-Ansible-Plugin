@@ -6,6 +6,19 @@ from ansible.executor.task_result import TaskResult
 from ansible.playbook.task import Task
 from ansible.plugins.callback.default import CallbackModule as Default
 
+ESCAPE_DICT = {
+    "'": "|'",
+    "|": "||",
+    "\n": "|n",
+    "\r": "|r",
+    '[': '|[',
+    ']': '|]'
+}
+
+
+def escape_value(value):
+    return "".join(ESCAPE_DICT.get(x, x) for x in value)
+
 
 class CallbackModule(Default):
     CALLBACK_VERSION = 1.0
@@ -24,22 +37,31 @@ class CallbackModule(Default):
         except KeyError:
             return None
 
+    def _service_message_block_open(self, name: str):
+        escaped_name = escape_value(name)
+        sys.stdout.write(f"##teamcity[blockOpened name='{escaped_name}']")
+        sys.stdout.flush()
+
+    def _service_message_block_close(self, name: str):
+        escaped_name = escape_value(name)
+        sys.stdout.write(f"##teamcity[blockClosed name='{escaped_name}']")
+        sys.stdout.flush()
+
+    def _service_message_build_problem(self, msg: str, identity: str = None):
+        escaped_message = escape_value(msg)
+        identity_string = f"identity='{escape_value(identity)}'" if identity else None
+        sys.stdout.write(f"##teamcity[buildProblem description='{escaped_message}' {identity_string}]")
+        sys.stdout.flush()
+
     def _emit_task_block_opened(self, task: Task):
         self._last_task_block_name = task.get_name()
-        sys.stdout.write(f"##teamcity[blockOpened name='{self._last_task_block_name}']")
-        sys.stdout.flush()
+        self._service_message_block_open(self._last_task_block_name)
         self._is_task_block_open = True
 
     def _emit_task_block_closed(self):
         if self._last_task_block_name and self._is_task_block_open:
-            sys.stdout.write(f"##teamcity[blockClosed name='{self._last_task_block_name}']")
-            sys.stdout.flush()
+            self._service_message_block_close(self._last_task_block_name)
             self._is_task_block_open = False
-
-    def _emit_build_problem(self, msg: str, identity: str = None):
-        identity_string = f"identity='{identity}'" if identity else None
-        sys.stdout.write(f"##teamcity[buildProblem description='{msg}' {identity_string}]")
-        sys.stdout.flush()
 
     def _print_task_banner(self, task: Task):
         self._emit_task_block_closed()
@@ -49,13 +71,28 @@ class CallbackModule(Default):
     def v2_runner_item_on_failed(self, result: TaskResult):
         super().v2_runner_item_on_failed(result)
         msg = f"Task <{result.task_name}> failed on <{result._host}> host"
-        self._emit_build_problem(msg, result.task_name)
+        self._service_message_build_problem(msg, result.task_name)
 
     def v2_runner_on_ok(self, result: TaskResult):
         super().v2_runner_on_ok(result)
         if result.is_changed() and self._fail_on_changes:
             msg = f"Changes in <{result.task_name}> task for <{result._host}> host"
-            self._emit_build_problem(msg, result.task_name)
+            self._service_message_build_problem(msg, result.task_name)
+
+    def runner_on_async_failed(self, host, res, jid):
+        sys.stdout.write(jid)
+        sys.stdout.flush()
+        super().runner_on_async_failed(host, res, jid)
+
+    def runner_on_async_ok(self, host, res, jid):
+        sys.stdout.write(jid)
+        sys.stdout.flush()
+        super().runner_on_async_failed(host, res, jid)
+
+    def runner_on_async_poll(self, host, res, jid, clock):
+        sys.stdout.write(jid)
+        sys.stdout.flush()
+        super().runner_on_async_failed(host, res, jid, clock)
 
     def v2_playbook_on_stats(self, stats: AggregateStats):
         self._emit_task_block_closed()

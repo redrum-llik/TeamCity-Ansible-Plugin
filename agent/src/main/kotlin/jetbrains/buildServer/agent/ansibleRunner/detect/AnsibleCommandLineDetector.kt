@@ -60,7 +60,7 @@ class AnsibleCommandLineDetector : AnsibleDetector {
         if (!StringUtil.isEmptyOrSpaces(stdErr)) {
             b.append("\n----- stderr: -----\n").append(stdErr).append("\n")
         }
-        LOG.warn(b.toString())
+        LOG.debug(b.toString())
     }
 
     private fun handleDetectionProcess(commandLine: GeneralCommandLine): ProcessOutput? {
@@ -85,6 +85,7 @@ class AnsibleCommandLineDetector : AnsibleDetector {
 
     companion object {
         private val pythonVersionPattern = "^([0-9.]*)".toRegex()
+        private val LOG = Logger.getInstance(this::class.java.name)
 
         data class SearchPath(
             val path: String,
@@ -142,6 +143,11 @@ class AnsibleCommandLineDetector : AnsibleDetector {
                 pythonVersion,
                 detectionPath.isDefault
             )
+
+            when (detectionPath.isDefault) {
+                true -> LOG.info("Found Ansible $version instance in PATH")
+                false -> LOG.info("Found Ansible $version instance in $executablePath")
+            }
         }
     }
 }

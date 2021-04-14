@@ -52,7 +52,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         config: AnsibleRunnerInstanceConfiguration
     ): String {
         val playbook = config.getPlaybookYaml()
-        val playbookFile = File(buildTempDirectory.absolutePath, "custom_playbook_${UUID.randomUUID()}.yml")
+        val playbookFile = File(agentTempDirectory.absolutePath, "custom_playbook_${UUID.randomUUID()}.yml")
         playbookFile.writeText(playbook!!)
         return playbookFile.normalize().absolutePath
     }
