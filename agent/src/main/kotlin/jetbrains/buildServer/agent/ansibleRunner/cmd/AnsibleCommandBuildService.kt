@@ -70,7 +70,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
     ): String {
         val gson = Gson()
         val varFile = File(
-            buildTempDirectory.absolutePath,
+            agentTempDirectory.absolutePath,
             "ansible_varfile_${UUID.randomUUID()}.json"
         ).normalize()
         val writer = FileWriter(varFile)

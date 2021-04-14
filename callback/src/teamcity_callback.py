@@ -79,21 +79,6 @@ class CallbackModule(Default):
             msg = f"Changes in <{result.task_name}> task for <{result._host}> host"
             self._service_message_build_problem(msg, result.task_name)
 
-    def runner_on_async_failed(self, host, res, jid):
-        sys.stdout.write(jid)
-        sys.stdout.flush()
-        super().runner_on_async_failed(host, res, jid)
-
-    def runner_on_async_ok(self, host, res, jid):
-        sys.stdout.write(jid)
-        sys.stdout.flush()
-        super().runner_on_async_failed(host, res, jid)
-
-    def runner_on_async_poll(self, host, res, jid, clock):
-        sys.stdout.write(jid)
-        sys.stdout.flush()
-        super().runner_on_async_failed(host, res, jid, clock)
-
     def v2_playbook_on_stats(self, stats: AggregateStats):
         self._emit_task_block_closed()
         super().v2_playbook_on_stats(stats)
