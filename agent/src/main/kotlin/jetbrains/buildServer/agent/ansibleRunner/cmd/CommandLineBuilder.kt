@@ -1,12 +1,10 @@
 package jetbrains.buildServer.agent.ansibleRunner.cmd
 
-import com.intellij.openapi.diagnostic.Logger
+import jetbrains.buildServer.agent.BuildProgressLogger
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine
-import java.nio.file.NoSuchFileException
 
-class CommandLineBuilder {
-    private val LOG = Logger.getInstance(this.javaClass.name)
+class CommandLineBuilder(private val logger: BuildProgressLogger) {
     private val arguments: ArrayList<String> = ArrayList()
     private val environment: MutableMap<String, String> = HashMap()
     var workingDir: String = String()
@@ -53,9 +51,9 @@ class CommandLineBuilder {
 
     fun addEnvironmentVariable(varName: String, value: String = String()) {
         if (environment.containsKey(varName)) {
-            LOG.warn("Overriding environment variable $varName with value $value")
+            logger.warning("Overriding environment variable $varName with value $value")
         } else {
-            LOG.debug("Adding environment variable $varName: $value")
+            logger.debug("Adding environment variable $varName: $value")
         }
         environment[varName] = value
     }

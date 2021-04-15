@@ -14,13 +14,10 @@ import java.util.*
 import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 
 class AnsibleCommandBuildService : BuildServiceAdapter() {
-    private val LOG = Logger.getInstance(this.javaClass.name)
 
     override fun makeProgramCommandLine(): ProgramCommandLine {
         val config = AnsibleRunnerInstanceConfiguration(runnerParameters)
-        LOG.debug("Going to execute Ansible runner with following parameters: $config")
-
-        val builder = CommandLineBuilder()
+        val builder = CommandLineBuilder(logger)
         prepareArguments(config, builder)
         prepareEnvironment(config, builder)
         builder.executablePath = getExecutablePath()
@@ -143,7 +140,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         builder.setEnvironment(environmentVariables)
 
         if (config.getIsLogColored()) {
-            LOG.debug("Forcing colored build log for Ansible playbook execution")
+            logger.debug("Forcing colored build log for Ansible playbook execution")
             builder.addEnvironmentVariable(
                 RunnerConst.ENV_FORCE_COLOR,
                 true.toString()
@@ -151,7 +148,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         }
 
         if (config.getIsFailOnChanges()) {
-            LOG.debug("Will fail build if any changes are detected")
+            logger.debug("Will fail build if any changes are detected")
             builder.addEnvironmentVariable(
                 RunnerConst.ENV_FAIL_ON_CHANGES,
                 true.toString()
