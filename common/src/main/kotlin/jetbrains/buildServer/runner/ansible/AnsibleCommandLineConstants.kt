@@ -1,4 +1,4 @@
-package jetbrains.buildServer.agent.ansibleRunner
+package jetbrains.buildServer.runner.ansible
 
 object AnsibleCommandLineConstants {
     // ansible command-line data
@@ -10,6 +10,7 @@ object AnsibleCommandLineConstants {
     const val PARAM_CHECK = "--check"
     const val PARAM_INVENTORY = "--inventory"
     const val PARAM_EXTRA_VARS = "--extra-vars"
+    const val PARAM_EXTRA_VARS_SHORT = "-e"
 
     // ansible environment values
 

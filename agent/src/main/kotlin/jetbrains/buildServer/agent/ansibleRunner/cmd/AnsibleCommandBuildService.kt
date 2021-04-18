@@ -1,17 +1,16 @@
 package jetbrains.buildServer.agent.ansibleRunner.cmd
 
 import com.google.gson.Gson
-import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter
 import jetbrains.buildServer.agent.runner.ProgramCommandLine
 import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import java.io.File
 import java.io.FileWriter
 import java.nio.file.NoSuchFileException
 import java.util.*
-import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
+import jetbrains.buildServer.runner.ansible.AnsibleCommandLineConstants as RunnerConst
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 
 class AnsibleCommandBuildService : BuildServiceAdapter() {
 
@@ -54,27 +53,24 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         return playbookFile.normalize().absolutePath
     }
 
-    private fun checkAnsiblePrefixedSystemParameters(): Boolean {
-        systemProperties.forEach { param ->
-            if (param.key.startsWith(CommonConst.BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX)) {
-                return true
-            }
+    private fun formatSystemProperties(): MutableMap<String, String> {
+        val result: MutableMap<String, String> = HashMap()
+        for (parameter in systemProperties) {
+            // Ansible variables cannot include dots
+            val newKey = parameter.key.replace(".", "_")
+            result[newKey] = parameter.value
         }
-        return false
+        return result
     }
 
-    private fun saveArgumentsToFile(
-    ): String {
-        val gson = Gson()
+    private fun saveArgumentsToFile(): String {
         val varFile = File(
             agentTempDirectory.absolutePath,
             "ansible_varfile_${UUID.randomUUID()}.json"
         ).normalize()
         val writer = FileWriter(varFile)
-        val json = gson.toJson(
-            systemProperties.filterKeys {
-                it.startsWith(CommonConst.BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX)
-            }
+        val json = Gson().toJson(
+            formatSystemProperties()
         )
         writer.run {
             write(json)
@@ -93,16 +89,17 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
             builder.addArgument(RunnerConst.PARAM_INVENTORY, inventory)
         }
 
-        val extraArgs = config.getExtraArgs()
-        if (!extraArgs.isNullOrEmpty()) {
-            builder.addArgument(value = extraArgs)
+        val additionalArgs = config.getAdditionalArgs()
+        if (!additionalArgs.isNullOrEmpty()) {
+            builder.addArgument(value = additionalArgs)
         }
 
-        if (checkAnsiblePrefixedSystemParameters()) {
+        if (config.getPassSystemParams()) {
             builder.addArgument(
                 RunnerConst.PARAM_EXTRA_VARS,
                 saveArgumentsToFile()
             )
+
         }
 
         if (config.getIsFailOnChanges()) {

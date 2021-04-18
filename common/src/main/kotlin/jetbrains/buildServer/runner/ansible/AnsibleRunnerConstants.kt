@@ -7,9 +7,6 @@ object AnsibleRunnerConstants {
     const val RUNNER_TYPE = "ansible-runner"
     const val CALLBACK_FOLDER = "callback"
 
-    // prefix for Ansible system parameters
-    const val BUILD_PARAM_SYSTEM_ANSIBLE_PREFIX = "ansible."
-
     // detection variables
     const val BUILD_PARAM_SEARCH_PATH = "teamcity.ansible.detector.search.path"
 
@@ -32,6 +29,7 @@ object AnsibleRunnerConstants {
     const val RUNNER_SETTING_ADDITIONAL_ARGS = "additionalArguments"
     const val RUNNER_SETTING_FAIL_IF_CHANGES = "failIfChanges"
     const val RUNNER_SETTING_FORCE_COLORED_LOG = "forceColoredLog"
+    const val RUNNER_SETTING_PASS_SYSTEM_PARAMS = "passSystemParams"
 }
 
 fun getVersionedAnsibleVarPrefix(version: String) : String {

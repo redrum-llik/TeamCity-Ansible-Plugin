@@ -20,7 +20,7 @@ class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, Str
         return properties[AnsibleRunnerConstants.RUNNER_SETTING_INVENTORY_FILE]
     }
 
-    fun getExtraArgs(): String? {
+    fun getAdditionalArgs(): String? {
         return properties[AnsibleRunnerConstants.RUNNER_SETTING_ADDITIONAL_ARGS]
     }
 
@@ -30,5 +30,9 @@ class AnsibleRunnerInstanceConfiguration(private val properties: Map<String, Str
 
     fun getIsLogColored(): Boolean {
         return properties[AnsibleRunnerConstants.RUNNER_SETTING_FORCE_COLORED_LOG].toBoolean()
+    }
+
+    fun getPassSystemParams(): Boolean {
+        return properties[AnsibleRunnerConstants.RUNNER_SETTING_PASS_SYSTEM_PARAMS].toBoolean()
     }
 }
