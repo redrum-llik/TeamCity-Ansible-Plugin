@@ -32,6 +32,8 @@ Installed Ansible on the agent side with Python 3.X.
 
 **Force colored log**: inject `ANSIBLE_FORCE_COLOR` into the execution context.
 
+**Pass system parameters**: add `--extra-vars` argument pointing to the temporary file with system variables (see below).
+
 ## Docker Settings
 
 See the relevant information on the [Docker Wrapper](https://www.jetbrains.com/help/teamcity/docker-wrapper.html) documentation page.
@@ -54,6 +56,7 @@ The runner will impose the following [agent requirements](https://www.jetbrains.
 * `ansible.pythonversion` >= 3.0.0
 * `ansible.path` exists
 
-## Prefixed parameters
+## System parameters
 
-Any system build parameter which starts with the `system.ansible.` prefix will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. This allows easily passing a TeamCity parameter into the playbook context, even if this parameter is defined in a file.
+If a corresponding option is enabled, system build parameters will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. The dots (`.`) in parameter name are replaced with underscores (`_`) to provide a valid variable identifier. 
+If an additional arguments field does contain the `--extra-vars` argument too, this option should be turned off.
