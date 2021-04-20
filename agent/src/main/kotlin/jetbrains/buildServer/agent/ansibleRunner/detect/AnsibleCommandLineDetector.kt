@@ -7,7 +7,7 @@ import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
-import jetbrains.buildServer.runner.ansible.AnsibleCommandLineConstants as RunnerConst
+import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
 import java.io.File
 import java.nio.charset.StandardCharsets

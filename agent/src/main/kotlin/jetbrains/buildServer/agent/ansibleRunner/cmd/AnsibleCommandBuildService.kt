@@ -9,8 +9,9 @@ import java.io.File
 import java.io.FileWriter
 import java.nio.file.NoSuchFileException
 import java.util.*
-import jetbrains.buildServer.runner.ansible.AnsibleCommandLineConstants as RunnerConst
+import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
+import jetbrains.buildServer.util.StringUtil
 
 class AnsibleCommandBuildService : BuildServiceAdapter() {
 
@@ -53,6 +54,29 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
         return playbookFile.normalize().absolutePath
     }
 
+    private fun getArgumentRegex(argumentName: String): Regex {
+        return "\\s?${argumentName}\\s".toRegex()
+    }
+
+    private fun checkExtraVarsInAdditionalArgs(
+        config: AnsibleRunnerInstanceConfiguration
+    ): Boolean {
+        if (!config.getAdditionalArgs().isNullOrEmpty()) {
+            val additionalArgs = config.getAdditionalArgs()!!
+            if (
+                additionalArgs.contains(
+                    getArgumentRegex(RunnerConst.PARAM_EXTRA_VARS)
+                ) ||
+                additionalArgs.contains(
+                    getArgumentRegex(RunnerConst.PARAM_EXTRA_VARS_SHORT)
+                )
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun formatSystemProperties(): MutableMap<String, String> {
         val result: MutableMap<String, String> = HashMap()
         for (parameter in systemProperties) {
@@ -91,15 +115,20 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
 
         val additionalArgs = config.getAdditionalArgs()
         if (!additionalArgs.isNullOrEmpty()) {
-            builder.addArgument(value = additionalArgs)
+            for (value in StringUtil.splitHonorQuotes(additionalArgs)) {
+                builder.addArgument(value = value)
+            }
         }
 
         if (config.getPassSystemParams()) {
-            builder.addArgument(
-                RunnerConst.PARAM_EXTRA_VARS,
-                saveArgumentsToFile()
-            )
-
+            if (checkExtraVarsInAdditionalArgs(config)) {
+                logger.warning("--extra-vars argument detected in additional arguments; TeamCity system parameters are skipped to avoid conflict")
+            } else {
+                builder.addArgument(
+                    RunnerConst.PARAM_EXTRA_VARS,
+                    saveArgumentsToFile()
+                )
+            }
         }
 
         if (config.getIsFailOnChanges()) {

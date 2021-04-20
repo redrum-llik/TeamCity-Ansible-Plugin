@@ -3,8 +3,6 @@ package jetbrains.buildServer.runner.ansibleRunner
 import jetbrains.buildServer.requirements.Requirement
 import jetbrains.buildServer.requirements.RequirementType
 import jetbrains.buildServer.runner.ansible.AnsiblePlaybookType
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
-import jetbrains.buildServer.runner.ansible.AnsibleCommandLineConstants as RunnerConst
 import jetbrains.buildServer.runner.ansible.AnsibleRunnerInstanceConfiguration
 import jetbrains.buildServer.serverSide.InvalidProperty
 import jetbrains.buildServer.serverSide.PropertiesProcessor
@@ -12,6 +10,7 @@ import jetbrains.buildServer.serverSide.RunType
 import jetbrains.buildServer.serverSide.RunTypeRegistry
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import java.util.*
+import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
 
 
 class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: PluginDescriptor) : RunType() {
@@ -78,10 +77,6 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
 
     companion object {
         class ParametersValidator : PropertiesProcessor {
-            fun getArgumentRegex(argumentName: String): Regex {
-                return "\\s?${argumentName}\\s".toRegex()
-            }
-
             override fun process(properties: MutableMap<String, String>): MutableCollection<InvalidProperty> {
                 val ret: MutableCollection<InvalidProperty> = ArrayList<InvalidProperty>(1)
                 val config = AnsibleRunnerInstanceConfiguration(properties)
@@ -96,22 +91,6 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
 
                 if (config.getInventory().isNullOrEmpty()) {
                     ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_INVENTORY_FILE, "Required parameter"))
-                }
-
-                if (!config.getAdditionalArgs().isNullOrEmpty()) {
-                    val additionalArgs = config.getAdditionalArgs()!!
-                    if (
-                        additionalArgs.contains(
-                            getArgumentRegex(RunnerConst.PARAM_EXTRA_VARS)
-                        ) ||
-                        additionalArgs.contains(
-                            getArgumentRegex(RunnerConst.PARAM_EXTRA_VARS_SHORT)
-                        )
-                    ) {
-                        ret.add(
-                            InvalidProperty(CommonConst.RUNNER_SETTING_PASS_SYSTEM_PARAMS, "-e argument detected in additional arguments field")
-                        )
-                    }
                 }
 
                 return ret

@@ -1,4 +1,4 @@
-package jetbrains.buildServer.runner.ansible
+package jetbrains.buildServer.agent.ansibleRunner
 
 object AnsibleCommandLineConstants {
     // ansible command-line data
