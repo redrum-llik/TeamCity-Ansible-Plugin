@@ -122,7 +122,7 @@ class AnsibleCommandBuildService : BuildServiceAdapter() {
 
         if (config.getPassSystemParams()) {
             if (checkExtraVarsInAdditionalArgs(config)) {
-                logger.warning("--extra-vars argument detected in additional arguments; TeamCity system parameters are skipped to avoid conflict")
+                logger.warning("--extra-vars argument detected in additional arguments; TeamCity system properties are skipped to avoid conflict")
             } else {
                 builder.addArgument(
                     RunnerConst.PARAM_EXTRA_VARS,

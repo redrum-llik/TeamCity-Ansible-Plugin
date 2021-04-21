@@ -8,7 +8,7 @@
 <jsp:useBean id="failIfChangesBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.FailIfChangesBean"/>
 <jsp:useBean id="forceColoredLogBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.ForceColoredLogBean"/>
 <jsp:useBean id="inventoryBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.InventoryBean"/>
-<jsp:useBean id="passSystemParametersBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PassSystemParametersBean"/>
+<jsp:useBean id="passSystemPropertiesBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PassSystemPropertiesBean"/>
 <jsp:useBean id="playbookBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PlaybookBean"/>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
@@ -80,9 +80,9 @@
     </tr>
 
     <tr class="advancedSetting">
-        <th><label>${passSystemParametersBean.label}</label></th>
-        <td><props:checkboxProperty name="${passSystemParametersBean.key}"/>
-            <label for="${passSystemParametersBean.key}">${passSystemParametersBean.description}</label>
+        <th><label>${passSystemPropertiesBean.label}</label></th>
+        <td><props:checkboxProperty name="${passSystemPropertiesBean.key}"/>
+            <label for="${passSystemPropertiesBean.key}">${passSystemPropertiesBean.description}</label>
             <br/>
         </td>
     </tr>

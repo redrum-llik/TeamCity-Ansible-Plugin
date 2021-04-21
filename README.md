@@ -32,7 +32,7 @@ Installed Ansible on the agent side with Python 3.X.
 
 **Force colored log**: inject `ANSIBLE_FORCE_COLOR` into the execution context.
 
-**Pass system parameters**: add `--extra-vars` argument pointing to the temporary file with system variables (see below).
+**Pass system properties**: add `--extra-vars` argument pointing to the temporary file with system variables (see below).
 
 ## Docker Settings
 
@@ -56,7 +56,7 @@ The runner will impose the following [agent requirements](https://www.jetbrains.
 * `ansible.pythonversion` >= 3.0.0
 * `ansible.path` exists
 
-## System parameters
+## System properties
 
-If a corresponding option is enabled, system build parameters will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. The dots (`.`) in parameter name are replaced with underscores (`_`) to provide a valid variable identifier. 
+If a corresponding option is enabled, system properties will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. The dots (`.`) in property name are replaced with underscores (`_`) to provide a valid variable identifier. 
 If the additional arguments field contains the `--extra-vars` argument too, the logic will be skipped.

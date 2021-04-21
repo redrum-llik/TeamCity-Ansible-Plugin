@@ -8,7 +8,7 @@
 <jsp:useBean id="failIfChangesBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.FailIfChangesBean"/>
 <jsp:useBean id="forceColoredLogBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.ForceColoredLogBean"/>
 <jsp:useBean id="inventoryBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.InventoryBean"/>
-<jsp:useBean id="passSystemParametersBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PassSystemParametersBean"/>
+<jsp:useBean id="passSystemPropertiesBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PassSystemPropertiesBean"/>
 <jsp:useBean id="playbookBean" class="jetbrains.buildServer.runner.ansibleRunner.beans.PlaybookBean"/>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
@@ -47,5 +47,5 @@
 </div>
 
 <div class="parameter">
-    ${passSystemParametersBean.label} <props:displayCheckboxValue name="${passSystemParametersBean.key}" checkedValue="Yes" uncheckedValue="No"/>
+    ${passSystemPropertiesBean.label} <props:displayCheckboxValue name="${passSystemPropertiesBean.key}" checkedValue="Yes" uncheckedValue="No"/>
 </div>
