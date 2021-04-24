@@ -89,10 +89,6 @@ class AnsibleRunnerRunType(runTypeRegistry: RunTypeRegistry, val myDescriptor: P
                     }
                 }
 
-                if (config.getInventory().isNullOrEmpty()) {
-                    ret.add(InvalidProperty(CommonConst.RUNNER_SETTING_INVENTORY_FILE, "Required parameter"))
-                }
-
                 return ret
             }
         }
