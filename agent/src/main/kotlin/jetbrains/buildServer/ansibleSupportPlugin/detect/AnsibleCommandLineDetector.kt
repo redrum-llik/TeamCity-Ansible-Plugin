@@ -1,4 +1,4 @@
-package jetbrains.buildServer.agent.ansibleRunner.detect
+package jetbrains.buildServer.ansibleSupportPlugin.detect
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
@@ -7,8 +7,8 @@ import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
-import jetbrains.buildServer.agent.ansibleRunner.AnsibleCommandLineConstants as RunnerConst
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRuntimeConstants as RunnerConst
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.*

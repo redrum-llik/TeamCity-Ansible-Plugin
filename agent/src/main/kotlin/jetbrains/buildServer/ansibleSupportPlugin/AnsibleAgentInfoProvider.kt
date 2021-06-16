@@ -1,17 +1,17 @@
-package jetbrains.buildServer.agent.ansibleRunner
+package jetbrains.buildServer.ansibleSupportPlugin
 
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter
 import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.agent.BuildAgent
 import jetbrains.buildServer.agent.BuildAgentConfiguration
-import jetbrains.buildServer.agent.ansibleRunner.callback.AnsibleCallbackProvider
-import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleDetector
-import jetbrains.buildServer.agent.ansibleRunner.detect.AnsibleInstance
-import jetbrains.buildServer.runner.ansible.getVersionedConfigVarName
-import jetbrains.buildServer.runner.ansible.getVersionedPathVarName
-import jetbrains.buildServer.runner.ansible.getVersionedPyVersionVarName
-import jetbrains.buildServer.runner.ansible.AnsibleRunnerConstants as CommonConst
+import jetbrains.buildServer.ansibleSupportPlugin.callback.AnsibleCallbackProvider
+import jetbrains.buildServer.ansibleSupportPlugin.detect.AnsibleDetector
+import jetbrains.buildServer.ansibleSupportPlugin.detect.AnsibleInstance
+import jetbrains.buildServer.ansibleSupportPlugin.getVersionedConfigVarName
+import jetbrains.buildServer.ansibleSupportPlugin.getVersionedPathVarName
+import jetbrains.buildServer.ansibleSupportPlugin.getVersionedPyVersionVarName
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants as CommonConst
 import jetbrains.buildServer.util.EventDispatcher
 
 class AnsibleAgentInfoProvider(

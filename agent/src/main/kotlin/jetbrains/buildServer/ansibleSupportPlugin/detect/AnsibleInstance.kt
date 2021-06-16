@@ -1,4 +1,4 @@
-package jetbrains.buildServer.agent.ansibleRunner.detect
+package jetbrains.buildServer.ansibleSupportPlugin.detect
 
 data class AnsibleInstance(
     val version: String,

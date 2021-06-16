@@ -2,13 +2,14 @@
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
     <info>
-        <name>ansible.runner</name>
+        <name>ansible-runner</name>
         <display-name>Ansible Support</display-name>
         <version>@Version@</version> <!-- will be replaced from script -->
         <vendor>
             <name>JetBrains</name>  <!-- will be replaced from script -->
             <url>https://jetbrains.com</url> <!-- will be replaced from script -->
         </vendor>
+        <description>Provide report tab on changes in Ansible playbook tasks</description>
     </info>
     <deployment use-separate-classloader="true" allow-runtime-reload="true" node-responsibilities-aware="true"/>
 </teamcity-plugin>

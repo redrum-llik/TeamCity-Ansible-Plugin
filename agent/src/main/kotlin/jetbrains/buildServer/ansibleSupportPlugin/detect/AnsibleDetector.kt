@@ -1,4 +1,4 @@
-package jetbrains.buildServer.agent.ansibleRunner.detect
+package jetbrains.buildServer.ansibleSupportPlugin.detect
 
 import jetbrains.buildServer.agent.BuildAgentConfiguration
 

@@ -1,16 +1,10 @@
-package jetbrains.buildServer.agent.ansibleRunner
+package jetbrains.buildServer.ansibleSupportPlugin
 
-object AnsibleCommandLineConstants {
+object AnsibleRuntimeConstants {
     // ansible command-line data
 
     const val COMMAND_ANSIBLE = "ansible"
-    const val COMMAND_ANSIBLE_PLAYBOOK = "ansible-playbook"
-
     const val PARAM_VERSION = "--version"
-    const val PARAM_CHECK = "--check"
-    const val PARAM_INVENTORY = "--inventory"
-    const val PARAM_EXTRA_VARS = "--extra-vars"
-    const val PARAM_EXTRA_VARS_SHORT = "-e"
 
     // ansible environment values
 
@@ -22,6 +16,7 @@ object AnsibleCommandLineConstants {
 
     // used as a callback plugin parameter
     const val ENV_FAIL_ON_CHANGES = "ANSIBLE_TEAMCITY_FAIL_ON_CHANGES"
+    const val ENV_REPORT_PATH = "ANSIBLE_TEAMCITY_REPORT_PATH"
 
     // ansible callback data
 
