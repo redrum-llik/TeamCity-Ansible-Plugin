@@ -28,6 +28,7 @@ teamcity {
             into("callback") {
                 from (project(":callback").file("src")) {
                     include("**/*.py")
+                    include("ansibleReport.html.tmpl")
                 }
             }
         }

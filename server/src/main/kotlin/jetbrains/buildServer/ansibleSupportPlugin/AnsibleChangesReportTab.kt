@@ -1,7 +1,6 @@
 package jetbrains.buildServer.ansibleSupportPlugin
 
 import jetbrains.buildServer.log.Loggers
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants
 import jetbrains.buildServer.serverSide.BuildsManager
 import jetbrains.buildServer.serverSide.SBuild
 import jetbrains.buildServer.serverSide.artifacts.BuildArtifact
@@ -40,7 +39,7 @@ class AnsibleChangesReportTab(
                 BuildArtifactsViewMode.VIEW_HIDDEN_ONLY
             )
             hiddenArtifacts.getArtifact(
-                "${AnsibleRunnerConstants.HIDDEN_ARTIFACT_REPORT_FOLDER}${File.separator}${AnsibleRunnerConstants.HIDDEN_ARTIFACT_REPORT_FILENAME}"
+                "${AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FOLDER}${File.separator}${AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FILENAME}"
             )
         } catch (e: AccessDeniedException) {
             null

@@ -1,9 +1,6 @@
 package jetbrains.buildServer.ansibleSupportPlugin
 
-import jetbrains.buildServer.ArtifactsConstants
-import java.io.File
-
-object AnsibleRunnerConstants {
+object AnsibleFeatureConstants {
     // plugin-level data
     const val FEATURE_DISPLAY_NAME = "Ansible integration"
     const val FEATURE_TYPE = "ansible-integration"
@@ -37,17 +34,17 @@ object AnsibleRunnerConstants {
 }
 
 fun getVersionedAnsibleVarPrefix(version: String) : String {
-    return "${AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_PREFIX}.${version}"
+    return "${AnsibleFeatureConstants.AGENT_PARAM_ANSIBLE_PREFIX}.${version}"
 }
 
 fun getVersionedPathVarName(version: String) : String {
-    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleRunnerConstants.AGENT_PARAM_PATH_POSTFIX}"
+    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleFeatureConstants.AGENT_PARAM_PATH_POSTFIX}"
 }
 
 fun getVersionedConfigVarName(version: String) : String {
-    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleRunnerConstants.AGENT_PARAM_CONFIG_FILE_POSTFIX}"
+    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleFeatureConstants.AGENT_PARAM_CONFIG_FILE_POSTFIX}"
 }
 
 fun getVersionedPyVersionVarName(version: String) : String {
-    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleRunnerConstants.AGENT_PARAM_PY_VERSION_POSTFIX}"
+    return "${getVersionedAnsibleVarPrefix(version)}.${AnsibleFeatureConstants.AGENT_PARAM_PY_VERSION_POSTFIX}"
 }

@@ -8,7 +8,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.text.StringUtil
 import jetbrains.buildServer.agent.BuildAgentConfiguration
 import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRuntimeConstants as RunnerConst
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleFeatureConstants
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -30,7 +30,7 @@ class AnsibleCommandLineDetector : AnsibleDetector {
     }
 
     private fun getSearchPaths(buildAgentConfiguration: BuildAgentConfiguration): MutableList<SearchPath> {
-        val searchPath = buildAgentConfiguration.configurationParameters[AnsibleRunnerConstants.BUILD_PARAM_SEARCH_PATH]
+        val searchPath = buildAgentConfiguration.configurationParameters[AnsibleFeatureConstants.BUILD_PARAM_SEARCH_PATH]
         val workDirPath = buildAgentConfiguration.workDirectory.toString()
         val result: MutableList<SearchPath> = ArrayList<SearchPath>()
         if (!searchPath.isNullOrBlank()) {

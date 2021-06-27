@@ -1,9 +1,8 @@
 package jetbrains.buildServer.ansibleSupportPlugin
 
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleFeatureConfiguration
 import jetbrains.buildServer.serverSide.BuildFeature
 import jetbrains.buildServer.web.openapi.PluginDescriptor
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants as CommonConst
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleFeatureConstants as CommonConst
 
 class AnsibleSupportBuildFeature(descriptor: PluginDescriptor) : BuildFeature() {
     private val myEditUrl = descriptor.getPluginResourcesPath(
@@ -24,7 +23,7 @@ class AnsibleSupportBuildFeature(descriptor: PluginDescriptor) : BuildFeature() 
 
     override fun describeParameters(params: MutableMap<String, String>): String {
         return buildString {
-            append("Provide report tab on changes in Ansible playbook tasks")
+            appendLine("Provide report tab on changes in Ansible playbook tasks")
             val config = AnsibleFeatureConfiguration(params)
 
             if (config.buildProblemOnChange()) {

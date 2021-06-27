@@ -1,3 +1,5 @@
+from jinja2 import Template, Environment, FileSystemLoader
+
 import os
 import sys
 
@@ -15,6 +17,10 @@ ESCAPE_DICT = {
     ']': '|]'
 }
 
+FAIL_ON_CHANGES_ENVVAR = 'ANSIBLE_TEAMCITY_FAIL_ON_CHANGES'
+REPORT_PATH_ENVVAR = 'ANSIBLE_TEAMCITY_REPORT_PATH'
+REPORT_TEMPLATE_NAME = 'ansibleReport.html.tmpl'
+
 
 def escape_value(value):
     return "".join(ESCAPE_DICT.get(x, x) for x in value)
@@ -29,8 +35,8 @@ class CallbackModule(Default):
         super(CallbackModule, self).__init__()
         self._last_task_block_name = None
         self._is_task_block_open = False
-        self._fail_on_changes = os.getenv("ANSIBLE_TEAMCITY_FAIL_ON_CHANGES")
-        self._report_path = os.getenv("ANSIBLE_TEAMCITY_REPORT_PATH")
+        self._fail_on_changes = os.getenv(FAIL_ON_CHANGES_ENVVAR)
+        self._report_path = os.getenv(REPORT_PATH_ENVVAR)
         if self._report_path:
             self._service_message_debug_log(f'Writing Ansible changes report to the {self._report_path}')
             self._report = AnsibleReport(self._report_path)
@@ -99,7 +105,7 @@ class CallbackModule(Default):
     def v2_playbook_on_stats(self, stats: AggregateStats):
         self._emit_task_block_closed()
         if self._report:
-            self._report.to_file()
+            self._report.render_to_file()
         super().v2_playbook_on_stats(stats)
 
 
@@ -108,43 +114,29 @@ class AnsibleReport():
         self._changes = {}
         self._report_path = report_path
 
+        callback_folder = os.path.dirname(
+            os.path.realpath(__file__)
+        )
+        fs_loader = FileSystemLoader(searchpath=callback_folder)
+        env = Environment(loader=fs_loader, autoescape=True)
+        self._template = env.get_template(REPORT_TEMPLATE_NAME)
+
     @property
     def changes(self) -> dict:
         return self._changes
 
     def task_changes(self, task_name: str):
-        if task_name not in self.changes.keys():
-            self.changes[task_name] = set()
-        return self.changes[task_name]
+        task_name_string = str(task_name)
+        if task_name_string not in self.changes.keys():
+            self.changes[task_name_string] = set()
+        return self.changes[task_name_string]
 
-    def add_change(self, task_name: str, host_name: str):
-        self.task_changes(task_name).add(host_name)
+    def add_change(self, task_name, host_name):
+        host_name_string = str(host_name)
+        self.task_changes(task_name).add(host_name_string)
 
-    def _host_to_html(self, host_name):
-        result = [
-            '<li>', '<p>', str(host_name), '</p>', '</li>'
-        ]
-        return result
-
-    def _task_to_html(self, task_name: str):
-        task_data = self.task_changes(task_name)
-        result = []
-        result.append(f'<li>{str(task_name)}:')
-        result.append('<ul>')
-        for host_name in task_data:
-            result += self._host_to_html(host_name)
-        result.append('</ul>')
-
-        return result
-
-    def to_file(self):
-        result = []
-        result.append('<p>Changes by task:</p>')
-        result.append('<ul>')
-        for task_name in self.changes.keys():
-            result += self._task_to_html(task_name)
-        result.append('</ul>')
-
-        with open(self._report_path, "w") as report_file:
-            report_file.write('\n'.join(result))
-            report_file.flush()
+    def render_to_file(self):
+        output = self._template.render(changes=self._changes)
+        with open(self._report_path, 'w') as fh:
+            fh.write(output)
+            fh.flush()

@@ -8,10 +8,7 @@ import jetbrains.buildServer.agent.BuildAgentConfiguration
 import jetbrains.buildServer.ansibleSupportPlugin.callback.AnsibleCallbackProvider
 import jetbrains.buildServer.ansibleSupportPlugin.detect.AnsibleDetector
 import jetbrains.buildServer.ansibleSupportPlugin.detect.AnsibleInstance
-import jetbrains.buildServer.ansibleSupportPlugin.getVersionedConfigVarName
-import jetbrains.buildServer.ansibleSupportPlugin.getVersionedPathVarName
-import jetbrains.buildServer.ansibleSupportPlugin.getVersionedPyVersionVarName
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants as CommonConst
+import jetbrains.buildServer.ansibleSupportPlugin.AnsibleFeatureConstants as CommonConst
 import jetbrains.buildServer.util.EventDispatcher
 
 class AnsibleAgentInfoProvider(

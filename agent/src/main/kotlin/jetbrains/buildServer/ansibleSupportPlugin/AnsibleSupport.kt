@@ -3,8 +3,6 @@ package jetbrains.buildServer.ansibleSupportPlugin
 import com.google.gson.Gson
 import jetbrains.buildServer.agent.*
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleFeatureConfiguration
-import jetbrains.buildServer.ansibleSupportPlugin.AnsibleRunnerConstants
 import jetbrains.buildServer.util.EventDispatcher
 import java.io.File
 import java.io.FileWriter
@@ -29,7 +27,7 @@ class AnsibleSupport(
     }
 
     private fun getFeature(build: AgentRunningBuild): AgentBuildFeature? {
-        val features = build.getBuildFeaturesOfType(AnsibleRunnerConstants.FEATURE_TYPE)
+        val features = build.getBuildFeaturesOfType(AnsibleFeatureConstants.FEATURE_TYPE)
         if (features.isNotEmpty()) {
             return features.first()
         }
@@ -117,7 +115,7 @@ class AnsibleSupport(
 
     private fun getNewCallbackPluginPaths(build: AgentRunningBuild): String {
         val callbackFolderPath = build.sharedConfigParameters[
-                AnsibleRunnerConstants.AGENT_PARAM_ANSIBLE_CALLBACK_PATH
+                AnsibleFeatureConstants.AGENT_PARAM_ANSIBLE_CALLBACK_PATH
         ]
 
         val currentCallbackPluginPaths = build.sharedBuildParameters.environmentVariables[
@@ -158,7 +156,7 @@ class AnsibleSupport(
     }
 
     private fun isReportEnabled(runningBuild: AgentRunningBuild): Boolean {
-        val param = runningBuild.sharedBuildParameters.allParameters[AnsibleRunnerConstants.BUILD_PARAM_REPORT_ENABLED]
+        val param = runningBuild.sharedBuildParameters.allParameters[AnsibleFeatureConstants.BUILD_PARAM_REPORT_ENABLED]
         if (param == null || param.toBoolean()) {
             return true
         }
@@ -187,7 +185,7 @@ class AnsibleSupport(
             if (isReportEnabled(runningBuild)) { // pass report path to the script and register it as an artifact path
                 myReportPath = File(
                     runningBuild.agentTempDirectory,
-                    AnsibleRunnerConstants.HIDDEN_ARTIFACT_REPORT_FILENAME
+                    AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FILENAME
                 ).absolutePath
                 passReportPathParam(runningBuild, logger, myReportPath.toString())
             }
@@ -212,7 +210,7 @@ class AnsibleSupport(
     override fun beforeBuildFinish(build: AgentRunningBuild, buildStatus: BuildFinishedStatus) {
         if (isFeatureEnabled(build) && !myReportPath.isNullOrEmpty()) {
             myWatcher.addNewArtifactsPath(
-                "$myReportPath => ${AnsibleRunnerConstants.HIDDEN_ARTIFACT_REPORT_FOLDER}"
+                "$myReportPath => ${AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FOLDER}"
             )
         }
     }
