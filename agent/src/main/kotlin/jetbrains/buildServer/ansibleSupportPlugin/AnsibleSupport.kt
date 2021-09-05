@@ -6,6 +6,7 @@ import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher
 import jetbrains.buildServer.util.EventDispatcher
 import java.io.File
 import java.io.FileWriter
+import java.lang.Exception
 import java.nio.file.NoSuchFileException
 import java.util.*
 
@@ -175,43 +176,66 @@ class AnsibleSupport(
     override fun sourcesUpdated(runningBuild: AgentRunningBuild) {
         if (isFeatureEnabled(runningBuild)) {
             val logger = getBuildLogger(runningBuild)
-            val configuration = getFeatureConfiguration(runningBuild)
-
-            passCallbackEnvParams(
-                runningBuild,
-                logger
-            ) // pass environment variables needed to initialize the callback plugin
-
-            if (isReportEnabled(runningBuild)) { // pass report path to the script and register it as an artifact path
-                myReportPath = File(
-                    runningBuild.agentTempDirectory,
-                    AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FILENAME
-                ).absolutePath
-                passReportPathParam(runningBuild, logger, myReportPath.toString())
-            }
-
-            if (configuration.buildProblemOnChange()) { // should the callback create build problem if any changes are detected
-                passBuildProblemOnChangeEnvParam(runningBuild, logger)
-            }
-
-            if (configuration.forceColoredLog()) { // pass Ansible environment variable to enforce colored log
-                passForceColoredLogEnvParam(runningBuild, logger)
-            }
-
-            if (configuration.exportSystemProperties()) { // generate temporary file in defined path containing system vars in Ansible format
-                saveSystemPropertiesToFile(
-                    runningBuild,
-                    configuration.systemPropertiesOutFile()!!
-                )
+            try {
+                prepareEnvironment(runningBuild, logger)
+            } catch (e: Exception) {
+                logger.warning(e.stackTraceToString())
+                throw e
             }
         }
     }
 
+    private fun prepareEnvironment(runningBuild: AgentRunningBuild, logger: BuildProgressLogger) {
+        val configuration = getFeatureConfiguration(runningBuild)
+
+        passCallbackEnvParams(
+            runningBuild,
+            logger
+        ) // pass environment variables needed to initialize the callback plugin
+
+        if (isReportEnabled(runningBuild)) { // pass report path to the script and register it as an artifact path
+            myReportPath = File(
+                runningBuild.agentTempDirectory,
+                AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FILENAME
+            ).absolutePath
+            passReportPathParam(runningBuild, logger, myReportPath.toString())
+        }
+
+        if (configuration.buildProblemOnChange()) { // should the callback create build problem if any changes are detected
+            passBuildProblemOnChangeEnvParam(runningBuild, logger)
+        }
+
+        if (configuration.forceColoredLog()) { // pass Ansible environment variable to enforce colored log
+            passForceColoredLogEnvParam(runningBuild, logger)
+        }
+
+        if (configuration.exportSystemProperties()) { // generate temporary file in defined path containing system vars in Ansible format
+            saveSystemPropertiesToFile(
+                runningBuild,
+                configuration.systemPropertiesOutFile()!!
+            )
+        }
+    }
+
     override fun beforeBuildFinish(build: AgentRunningBuild, buildStatus: BuildFinishedStatus) {
-        if (isFeatureEnabled(build) && !myReportPath.isNullOrEmpty()) {
+        if (!buildStatus.isFailed && isFeatureEnabled(build)) {
+            val logger = getBuildLogger(build)
+            try {
+                handleAnsibleOutput(build, logger)
+            } catch (e: Exception) {
+                logger.warning(e.stackTraceToString())
+                throw e
+            }
+        }
+    }
+
+    private fun handleAnsibleOutput(build: AgentRunningBuild, logger: BuildProgressLogger) {
+        if (!myReportPath.isNullOrEmpty()) {
             myWatcher.addNewArtifactsPath(
                 "$myReportPath => ${AnsibleFeatureConstants.HIDDEN_ARTIFACT_REPORT_FOLDER}"
             )
+        } else if (isReportEnabled(build)) {
+            logger.warning("Report path is not set")
         }
     }
 }

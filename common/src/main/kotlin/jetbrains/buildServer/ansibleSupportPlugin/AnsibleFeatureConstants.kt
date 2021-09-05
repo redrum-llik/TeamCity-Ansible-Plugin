@@ -2,7 +2,7 @@ package jetbrains.buildServer.ansibleSupportPlugin
 
 object AnsibleFeatureConstants {
     // plugin-level data
-    const val FEATURE_DISPLAY_NAME = "Ansible integration"
+    const val FEATURE_DISPLAY_NAME = "Ansible Integration"
     const val FEATURE_TYPE = "ansible-integration"
 
     // detection variables
