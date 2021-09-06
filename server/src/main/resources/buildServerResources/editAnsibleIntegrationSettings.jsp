@@ -1,6 +1,5 @@
 <%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
 <jsp:useBean id="buildProblemBean" class="jetbrains.buildServer.ansibleSupportPlugin.beans.BuildProblemOnChangesBean"/>
-<jsp:useBean id="systemPropertiesBean" class="jetbrains.buildServer.ansibleSupportPlugin.beans.SystemPropertiesBean"/>
 <jsp:useBean id="forceColoredLogBean" class="jetbrains.buildServer.ansibleSupportPlugin.beans.ForceColoredLogBean"/>
 
 <tr>
@@ -19,12 +18,5 @@
     <td>
         <props:checkboxProperty name="${forceColoredLogBean.key}"/>
         <span class="smallNote">${forceColoredLogBean.description}</span>
-    </td>
-</tr>
-<tr class="noBorder">
-    <th><label for="${systemPropertiesBean.key}">${systemPropertiesBean.label}</label></th>
-    <td>
-        <props:textProperty name="${systemPropertiesBean.key}" className="longField"/>
-        <span class="smallNote">${systemPropertiesBean.description}</span>
     </td>
 </tr>

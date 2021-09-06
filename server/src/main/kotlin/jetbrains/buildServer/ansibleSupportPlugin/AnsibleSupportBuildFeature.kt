@@ -33,10 +33,6 @@ class AnsibleSupportBuildFeature(descriptor: PluginDescriptor) : BuildFeature() 
             if (config.forceColoredLog()) {
                 appendLine("Force colored log for Ansible calls")
             }
-
-            if (config.exportSystemProperties()) {
-                appendLine("Export system properties to ${config.systemPropertiesOutFile()} file")
-            }
         }
     }
 }

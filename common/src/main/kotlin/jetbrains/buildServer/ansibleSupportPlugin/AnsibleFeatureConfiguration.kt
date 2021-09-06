@@ -8,12 +8,4 @@ class AnsibleFeatureConfiguration(private val properties: MutableMap<String, Str
     fun forceColoredLog(): Boolean {
         return properties[AnsibleFeatureConstants.FEATURE_SETTING_FORCE_COLORED_LOG].toBoolean()
     }
-
-    fun exportSystemProperties(): Boolean {
-        return !systemPropertiesOutFile().isNullOrEmpty()
-    }
-
-    fun systemPropertiesOutFile(): String? {
-        return properties[AnsibleFeatureConstants.FEATURE_SETTING_SYSTEM_PROPERTIES]
-    }
 }

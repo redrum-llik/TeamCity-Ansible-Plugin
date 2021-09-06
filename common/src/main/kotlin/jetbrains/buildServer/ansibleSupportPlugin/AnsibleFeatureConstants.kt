@@ -29,7 +29,6 @@ object AnsibleFeatureConstants {
 
     // ansible bean parameters
     const val FEATURE_SETTING_BUILD_PROBLEM_ON_CHANGE = "buildProblemOnChange"
-    const val FEATURE_SETTING_SYSTEM_PROPERTIES = "systemProperties"
     const val FEATURE_SETTING_FORCE_COLORED_LOG = "forceColoredLog"
 }
 

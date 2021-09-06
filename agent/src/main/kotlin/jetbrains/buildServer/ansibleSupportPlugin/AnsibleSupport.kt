@@ -1,14 +1,10 @@
 package jetbrains.buildServer.ansibleSupportPlugin
 
-import com.google.gson.Gson
 import jetbrains.buildServer.agent.*
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher
 import jetbrains.buildServer.util.EventDispatcher
 import java.io.File
-import java.io.FileWriter
-import java.lang.Exception
 import java.nio.file.NoSuchFileException
-import java.util.*
 
 class AnsibleSupport(
     events: EventDispatcher<AgentLifeCycleListener>,
@@ -43,35 +39,6 @@ class AnsibleSupport(
 
     private fun getBuildLogger(build: AgentRunningBuild): FlowLogger {
         return build.buildLogger.getFlowLogger(myFlowId)!!
-    }
-
-    private fun formatSystemProperties(build: AgentRunningBuild): MutableMap<String, String> {
-        val result: MutableMap<String, String> = HashMap()
-        val systemProperties = build.sharedBuildParameters.systemProperties
-
-        for (parameter in systemProperties) {
-            // Ansible variables cannot include dots
-            val newKey = parameter.key.replace(".", "_")
-            result[newKey] = parameter.value
-        }
-        return result
-    }
-
-    private fun saveSystemPropertiesToFile(build: AgentRunningBuild, filePath: String): String {
-        val varFile = File(
-            build.checkoutDirectory,
-            filePath
-        ).normalize()
-        val writer = FileWriter(varFile)
-        val json = Gson().toJson(
-            formatSystemProperties(build)
-        )
-        writer.run {
-            write(json)
-            close()
-        }
-
-        return varFile.absolutePath
     }
 
     private fun passEnvParamToBuild(
@@ -207,13 +174,6 @@ class AnsibleSupport(
 
         if (configuration.forceColoredLog()) { // pass Ansible environment variable to enforce colored log
             passForceColoredLogEnvParam(runningBuild, logger)
-        }
-
-        if (configuration.exportSystemProperties()) { // generate temporary file in defined path containing system vars in Ansible format
-            saveSystemPropertiesToFile(
-                runningBuild,
-                configuration.systemPropertiesOutFile()!!
-            )
         }
     }
 

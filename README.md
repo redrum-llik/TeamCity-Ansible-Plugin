@@ -5,8 +5,8 @@ This project aims to provide a simple Ansible-related build feature for TeamCity
 * custom [callback plugin](https://docs.ansible.com/ansible/latest/plugins/callback.html) which allows to: 
   * inject TeamCity service messages and format the build log
   * provide custom report tab to show the changed tasks and hosts where the changes happened
-* ability to pass system parameters as `--extra-vars`
-
+  * raise build problem in case changes are detected (e.g. dry run scenario)
+  
 Example of the report tab (to be prettified):
 
 ![image](https://user-images.githubusercontent.com/63649969/132141561-7324b4fc-12e8-4b78-b544-92f0c808f62e.png)
@@ -23,8 +23,6 @@ Callback plugin requires Ansible with Python 3.X.
 
 **Force colored log**: enforce the colored output for Ansible commands.
 
-**Save system properties to file**: save system build parameters into a file, formatted for usage with `--extra-vars` argument.
-
 # Implementation details
 
 ## Callback plugin
@@ -33,8 +31,3 @@ The runner supplies a simple [callback plugin](https://docs.ansible.com/ansible/
 
 * `ANSIBLE_STDOUT_CALLBACK` = `teamcity_callback` — this will override the stdout callback plugin with the one provided by this runner.
 * `ANSIBLE_CALLBACK_PLUGINS` — the path will be updated to also include the directory with the above plugin on the agent side.
-
-## System properties
-
-If a corresponding option is enabled, system properties will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. The dots (`.`) in property name are replaced with underscores (`_`) to provide a valid variable identifier. 
-If the additional arguments field contains the `--extra-vars` argument too, the logic will be skipped.
