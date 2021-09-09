@@ -3,5 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-autowire="constructor">
-    <bean id="ansibleRunnerRunType" class="jetbrains.buildServer.runner.ansibleRunner.AnsibleRunnerRunType"/>
+    <bean id="ansibleSupportBuildFeature" class="jetbrains.buildServer.ansibleSupportPlugin.AnsibleSupportBuildFeature"/>
+    <bean id="ansibleChangesReportTab " class="jetbrains.buildServer.ansibleSupportPlugin.AnsibleChangesReportTab" />
 </beans>

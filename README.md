@@ -1,42 +1,27 @@
 # Ansible plugin for TeamCity
 
-This project aims to provide a simple Ansible playbook runner for TeamCity. The key features are:
+This project aims to provide a simple Ansible-related build feature for TeamCity. The key features are:
 
-* custom [callback plugin](https://docs.ansible.com/ansible/latest/plugins/callback.html) which allows injecting TeamCity service messages and format the build log
-* automatic detection of `ansible-playbook` executable on the agent side
-* ability to pass system parameters as `--extra-vars`
+* custom [callback plugin](https://docs.ansible.com/ansible/latest/plugins/callback.html) which allows to: 
+  * inject TeamCity service messages and format the build log
+  * provide custom report tab to show the changed tasks and hosts where the changes happened
+  * raise build problem in case changes are detected (e.g. dry run scenario)
+  
+Example of the report tab (to be prettified):
 
-The scheduled features to be added in the future:
-* a report tab with a simple HTML report based on the playbook output/results
+![image](https://user-images.githubusercontent.com/63649969/132141561-7324b4fc-12e8-4b78-b544-92f0c808f62e.png)
 
-Example of the build log output:
-![image](https://user-images.githubusercontent.com/63649969/113508315-fb8dce00-9557-11eb-84ac-27e93dbb3ced.png)
+The usage scenario is to make a dry run as a first build, allow to check it manually easier and, if the changes look good, apply them in the second build. There is a planned feature to allow to request approval from a sufficiently permissioned user before starting the other build. 
 
 ## Requirements
 
-Installed Ansible on the agent side with Python 3.X.
+Callback plugin requires Ansible with Python 3.X. 
 
 # Configuration
 
-## Ansible Parameters
+**Create a build problem for any detected change**: for any detected change, create a build problem to fail the build. 
 
-**Playbook source**: defines the source of playbook for this runner. The playbook can be loaded from a file or defined inline.
-
-**Inventory**: defines the inventory file path.
-
-**Additional arguments**: any extra arguments to be passed to the command.
-
-## Run Parameters
-
-**Fail if changes detected**: add `--check` to the command arguments, and instruct a callback plugin (see below) to raise a build problem if any changes are detected.
-
-**Force colored log**: inject `ANSIBLE_FORCE_COLOR` into the execution context.
-
-**Pass system properties**: add `--extra-vars` argument pointing to the temporary file with system variables (see below).
-
-## Docker Settings
-
-See the relevant information on the [Docker Wrapper](https://www.jetbrains.com/help/teamcity/docker-wrapper.html) documentation page.
+**Force colored log**: enforce the colored output for Ansible commands.
 
 # Implementation details
 
@@ -46,17 +31,3 @@ The runner supplies a simple [callback plugin](https://docs.ansible.com/ansible/
 
 * `ANSIBLE_STDOUT_CALLBACK` = `teamcity_callback` — this will override the stdout callback plugin with the one provided by this runner.
 * `ANSIBLE_CALLBACK_PLUGINS` — the path will be updated to also include the directory with the above plugin on the agent side.
-
-## Ansible detection
-
-The detection logic will look for the `ansible-playbook` executable in `PATH` as well as in any directory defined in the `teamcity.ansible.detector.search.path` agent property. All found instances are stored in the configuration variables of the agent (see `ansible.*` variables).
-
-The runner will impose the following [agent requirements](https://www.jetbrains.com/help/teamcity/agent-requirements.html):
-
-* `ansible.pythonversion` >= 3.0.0
-* `ansible.path` exists
-
-## System properties
-
-If a corresponding option is enabled, system properties will be exported into a temporary JSON file. This file will be supplied as the `--extra-vars` value. The dots (`.`) in property name are replaced with underscores (`_`) to provide a valid variable identifier. 
-If the additional arguments field contains the `--extra-vars` argument too, the logic will be skipped.

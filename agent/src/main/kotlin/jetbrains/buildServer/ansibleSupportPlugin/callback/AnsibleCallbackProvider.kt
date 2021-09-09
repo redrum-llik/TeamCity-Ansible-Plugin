@@ -1,4 +1,4 @@
-package jetbrains.buildServer.agent.ansibleRunner.callback
+package jetbrains.buildServer.ansibleSupportPlugin.callback
 
 interface AnsibleCallbackProvider {
     fun getCallbackFolderPath(): String
