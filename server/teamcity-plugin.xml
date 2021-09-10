@@ -2,7 +2,7 @@
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
     <info>
-        <name>ansible-runner</name>
+        <name>ansible-support</name>
         <display-name>Ansible Support</display-name>
         <version>@Version@</version> <!-- will be replaced from script -->
         <vendor>
