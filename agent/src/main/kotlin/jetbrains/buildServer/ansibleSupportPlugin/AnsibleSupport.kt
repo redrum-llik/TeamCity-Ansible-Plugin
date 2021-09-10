@@ -19,10 +19,6 @@ class AnsibleSupport(
         events.addListener(this)
     }
 
-    private fun isFeatureEnabled(build: AgentRunningBuild): Boolean {
-        return getFeature(build) != null
-    }
-
     private fun getFeature(build: AgentRunningBuild): AgentBuildFeature? {
         val features = build.getBuildFeaturesOfType(AnsibleFeatureConstants.FEATURE_TYPE)
         if (features.isNotEmpty()) {
@@ -31,9 +27,11 @@ class AnsibleSupport(
         return null
     }
 
-    private fun getFeatureConfiguration(build: AgentRunningBuild): AnsibleFeatureConfiguration {
+    private fun getFeatureConfiguration(
+        feature: AgentBuildFeature
+    ): AnsibleFeatureConfiguration {
         return AnsibleFeatureConfiguration(
-            getFeature(build)!!.parameters
+            feature.parameters
         )
     }
 
@@ -141,10 +139,11 @@ class AnsibleSupport(
     }
 
     override fun sourcesUpdated(runningBuild: AgentRunningBuild) {
-        if (isFeatureEnabled(runningBuild)) {
+        val feature = getFeature(runningBuild)
+        if (feature != null) {
             val logger = getBuildLogger(runningBuild)
             try {
-                prepareEnvironment(runningBuild, logger)
+                prepareEnvironment(runningBuild, feature, logger)
             } catch (e: Exception) {
                 logger.warning(e.stackTraceToString())
                 throw e
@@ -152,8 +151,12 @@ class AnsibleSupport(
         }
     }
 
-    private fun prepareEnvironment(runningBuild: AgentRunningBuild, logger: BuildProgressLogger) {
-        val configuration = getFeatureConfiguration(runningBuild)
+    private fun prepareEnvironment(
+        runningBuild: AgentRunningBuild,
+        feature: AgentBuildFeature,
+        logger: BuildProgressLogger
+    ) {
+        val configuration = getFeatureConfiguration(feature)
 
         passCallbackEnvParams(
             runningBuild,

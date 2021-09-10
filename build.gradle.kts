@@ -7,7 +7,7 @@ plugins {
 }
 
 ext {
-    set("teamcityVersion", "2020.2")
+    set("teamcityVersion", "2021.1")
 }
 
 allprojects {
@@ -18,7 +18,7 @@ allprojects {
     }
 
     group = "jetbrains.buildserver"
-    version = System.getenv("BUILD_NUMBER") ?: "1.0-dev"
+    version = System.getenv("BUILD_NUMBER") ?: "1.0"
 
 }
 
