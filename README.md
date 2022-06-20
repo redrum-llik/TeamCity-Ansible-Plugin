@@ -11,7 +11,7 @@ Example of the report tab (to be prettified):
 
 ![image](https://user-images.githubusercontent.com/63649969/132141561-7324b4fc-12e8-4b78-b544-92f0c808f62e.png)
 
-The usage scenario is to make a dry run as a first build, allow to check it manually easier and, if the changes look good, apply them in the second build. There is a planned feature to allow to request approval from a sufficiently permissioned user before starting the other build. 
+The usage scenario is to make a dry run as a first build, allow to check it manually easier and, if the changes look good, apply them in the second build.
 Synergises with [Manual Approval](https://www.jetbrains.com/help/teamcity/build-approval.html) feature introduced in 2022.04. 
 
 ## Requirements
