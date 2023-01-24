@@ -8,8 +8,8 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":common"))
-    testImplementation ("org.testng:testng:6.9.9")
-    testImplementation ("org.assertj:assertj-core:2.1.0")
+    testImplementation("org.testng:testng:6.9.9")
+    testImplementation("org.assertj:assertj-core:2.1.0")
 }
 
 teamcity {

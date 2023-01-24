@@ -181,7 +181,7 @@ class AnsibleSupport(
     }
 
     override fun beforeBuildFinish(build: AgentRunningBuild, buildStatus: BuildFinishedStatus) {
-        if (!buildStatus.isFailed && isFeatureEnabled(build)) {
+        if (getFeature(build) != null && !buildStatus.isFailed) {
             val logger = getBuildLogger(build)
             try {
                 handleAnsibleOutput(build, logger)
