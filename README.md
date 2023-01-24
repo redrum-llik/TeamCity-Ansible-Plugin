@@ -5,6 +5,7 @@ This project aims to provide a simple Ansible-related build feature for TeamCity
 * custom [callback plugin](https://docs.ansible.com/ansible/latest/plugins/callback.html) which allows to: 
   * inject TeamCity service messages and format the build log
   * provide custom report tab to show the changed tasks and hosts where the changes happened
+  * raise build problem for any failed task
   * raise build problem in case changes are detected (e.g. dry run scenario)
   
 Example of the report tab (to be prettified):
