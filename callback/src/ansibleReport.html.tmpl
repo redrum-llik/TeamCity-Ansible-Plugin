@@ -2,7 +2,7 @@
     <p>Changes by task:</p>
     <ul>
         {% for change in changes %}
-        <li>Simulate long running [async] op 1:
+        <li>{{ change }}:
             {% for host in changes[change] %}
             <ul>
                 <li>
